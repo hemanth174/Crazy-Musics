@@ -27,7 +27,9 @@ body, html {
     border: 5px solid rgba(255, 255, 255, 0.5); /* Optional border */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Optional shadow */
     z-index: 1;
+    border-radius: 10px;
 }
+
 .container{
     background-color: aqua;
     border-color:springgreen;
