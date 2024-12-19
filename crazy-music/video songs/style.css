@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Open+Sans:wght@400;700&family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&display=swap');
+
+/* General Body Styling */
+body {
+    font-family: 'Open Sans', sans-serif;
+    background: linear-gradient(to bottom, #2c3e50, #4ca1af);
+    color: #ffffff;
+}
+
+/* Navbar Styling */
+.navbar {
+    font-family: 'Roboto', sans-serif;
+    background-color: #1a1a1a;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link {
+    margin-right: 20px;
+    color: #ffffff;
+    transition: color 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+    color: #ff6347;
+}
+
+.navbar-toggler {
+    border-color: #ff6347;
+}
+
+/* Folder (Card) Styling */
+.folder1 {
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background-color: #1a1a1a;
+    height: 235px;
+    /*     width: 200px; */
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+
+}
+
+.folder1:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Images Styling */
+.image1,
+.image2,
+.image3,
+.image4,
+.image5,
+.image6,
+.image7,
+.image8,
+.image9,
+.image10,
+.image11,
+.image12,
+.image13,
+.image14 {
+    border-radius: 10px;
+    height: 160px;
+    width: 160px;
+    object-fit: cover;
+    margin-top: 20px;
+}
+
+/* Headings for Folders */
+.heading1,
+.heading2,
+.heading3,
+.heading4,
+.heading5,
+.heading6,
+.heading7,
+.heading8,
+.heading9,
+.heading10,
+.heading11,
+.heading12,
+.heading13,
+.heading14 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2em;
+    color: #ff6347;
+    margin-top: 10px;
+}
+
+/* Container Styling */
+.container {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Animations */
+.folder1 {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Search Bar Styling */
+form input[type="text"] {
+    border: 1px solid #ff6347;
+    padding: 8px;
+    border-radius: 5px;
+    width: 200px;
+}
+
+form button {
+    background-color: #ff6347;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+form button:hover {
+    background-color: #e5533a;
+}
