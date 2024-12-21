@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,34 +7,35 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video with Background</title>
+    <title>Video with Background Image</title>
     <link rel="stylesheet" href="video.css">
 </head>
 <body>
-    
-    <div class="video-container">
-        
-         
-        <video class="foreground-video"  autoplay loop >
-            <source src="./Crazy musics Home Page.mp4" type="video/mp4" >
-            Your browser does not support the video tag.
-        </video>
-    
-        
-            <div class="bg-container d-flex flex-column justify-content-end">
-             
-              <div class="tourism-card">
-                <a href = "./Sign in page/sign up.html">
-                  <button class="button" >Get Started</button>
-              </a>
-               
-                
-                
-                
-              </div>
-            </div>
-          </div>
+  <div class = "container">
    
    
+      
+  <!-- Video Section with Background Image -->
+  <div class="video-wrapper">
+    <video class="background-video" autoplay loop muted>
+        <source src="./Crazy musics Home Page.mp4" type="video/mp4">
+        <!-- Fallback Content for Browsers without Video Support -->
+        Your browser does not support the video tag.
+    </video>
+  
+    <!-- Background Image Fallback -->
+    
+  </div>
+  <div class="background-image">
+    </div>
+
+  <!-- Button Below Video -->
+  <div class="button-wrapper text-center">
+    <a href="./Sign in page/sign up.html">
+      <button class="button">Get Started</button>
+    </a>
+  </div>
+</div>
+
 </body>
 </html>

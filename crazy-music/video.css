@@ -1,79 +1,91 @@
+/* video.css */
 
-
-/* Apply full-page background */
+/* Reset Body and HTML */
 body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
+ 
+ background-size: cover;
+  width: 100%;
+  height: 50vh;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa; /* Light fallback background */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.video-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    
-    background-color: #000; /* Fallback background color */
+/* Video Wrapper */
+.video-wrapper {
+  background: transparent;
+  margin-top:50px;
+  height: 100vh; /* Video height: 70% of viewport */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:white; /* Fallback for video loading issues */
+  border-radius: 20px;
 }
 
-/* Video in the foreground */
-.foreground-video {
+/* Video Styling */
+.background-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the video scales without distortion */
+  z-index: 1; /* Video is above the background image */
   position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 70%; /* Adjust video size */
-    height: auto;
-    border: 5px solid rgba(255, 255, 255, 0.1); /* Optional border */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Optional shadow */
-    z-index: 1;
-    border-radius: 10px;
-    /* transition-duration: 10s; */
+  top: 0;
+  left: 0;
 }
 
-.container{
-    background-color: aqua;
-    border-color:springgreen;
-    border-style: solid;
-
+/* Background Image Fallback */
+.background-image {
+  background-image: url(''); /* Path to your image */
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 10%;
+  position: absolute;
+  z-index: 0; /* Image is below the video */
 }
-.bg-container{
-    background: url('https://res.cloudinary.com/dqtlqvhw5/image/upload/v1734436777/darius-F8E2tks5N04-unsplash_r96qe2.jpg') no-repeat center center/cover; /* Background Image */
-    height:95vh;
-    border-radius:20px;
+
+/* Button Wrapper */
+.button-wrapper {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px; /* Spacing between video and button */
 }
 
-  
-  .tourism-card {
-    text-align: center;
-    background-color:transparent;
-  
+/* Button Styling */
+.button {
+  padding: 10px 20px;
+  font-size: 18px;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Button Hover Effect */
+.button:hover {
+  background-color: #0056b3;
+  transform: scale(1.1); /* Slight zoom effect */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .video-wrapper {
+      height: 50vh; /* Adjust video height for smaller screens */
   }
   .button {
-    color: white;
-    background-color: #25b1cc;
-    width: 138px;
-    height: 36px;
-    border-width: 0px;
-    border-radius: 10px;
-    animation: fadeIn 1s ease-in-out;
-    transition: background-color 0.3s ease-in-out;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+      font-size: 16px; /* Adjust button size */
   }
-  @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
-  .main-heading {
-    font-family: "Roboto";
-  }
-  .paragraph {
-    font-family: "Roboto";
-  }
+.img{
+  background-size: cover;
+  height: 600px;
+  width: 550px;
+}
