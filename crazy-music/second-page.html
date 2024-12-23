@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
+    <title>Sign In with Photo Upload</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
@@ -16,12 +16,15 @@
 <body>
     <div class="container-fluid bg-gradient">
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-            <a class="navbar-brand" href="#">
-                <img src="https://res.cloudinary.com/dqtlqvhw5/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v1733390726/WIN_20240922_11_25_41_Pro_mz3mth.jpg" alt="Logo" class="img-fluid logo-img">
+            <a class="navbar-brand" href="#" data-toggle="modal" data-target="#uploadPhotoModal">
+                <img id="logo" src="#">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
+                
             </button>
+            Upload small photo
+            
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav ml-auto">
                     <a class="nav-link active" href="./index.html">Home</a>
@@ -54,7 +57,48 @@
         </div>
     </div>
 
-    <script src="./Sign in page/sign up.js"></script>
+    <!-- Modal for Uploading Photo -->
+    <div class="modal fade" id="uploadPhotoModal" tabindex="-1" aria-labelledby="uploadPhotoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadPhotoModalLabel">Upload Your Photo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="photoInput">Choose a photo:</label>
+                            <input type="file" id="photoInput" class="form-control-file" accept="image/*">
+                        </div>
+                        <button type="button" id="uploadPhotoBtn" class="btn btn-primary">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadPhotoBtn').addEventListener('click', function () {
+            const photoInput = document.getElementById('photoInput');
+            const logo = document.getElementById('logo');
+
+            if (photoInput.files && photoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    logo.src = e.target.result; // Replace the logo with the uploaded photo
+                };
+                reader.readAsDataURL(photoInput.files[0]);
+
+                // Close the modal after uploading
+                $('#uploadPhotoModal').modal('hide');
+            } else {
+                alert('Please select a photo to upload.');
+            }
+        });
+    </script>
 </body>
 
 </html>
