@@ -1,103 +1,63 @@
-/* video.css */
-
-/* Reset Body and HTML */
+/* Reset Styles */
 body, html {
- 
- background-size: cover;
-  width: 100%;
-  height: 100%;
-  font-family: Arial, sans-serif;
-  background-color: #f8f9fa; /* Light fallback background */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 20px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
 }
 
-/* Video Wrapper */
-.video-wrapper {
-  background: transparent;
- margin-left: 2%;
-  margin-top:100px;
-  height: 345%; /* Video height: 70% of viewport */
-  width:100%;
+/* Hero Section */
+.hero-section {
+  height: 100vh;
   position: relative;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color:white; /* Fallback for video loading issues */
-  border-radius: 50px;
-  background-size: cover;
-  object-fit: contain;
-  
 }
 
 /* Video Styling */
-.background-video {
-  border-color: cyan;
-  border-style: solid;
-   border-radius: 60px;
-  border-width: 3px;
+.hero-video {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Ensures the video scales without distortion */
-  z-index: 1; /* Video is above the background image */
+  object-fit: cover;
   position: absolute;
   top: 0;
   left: 0;
-  
+  z-index: 0;
 }
 
-/* Background Image Fallback */
-.background-image {
-  background-image: url(''); /* Path to your image */
-  background-size: cover;
-  background-position: center;
-  width: 100%;
-  height: 10%;
+/* Overlay Content */
+.hero-overlay {
   position: absolute;
-  z-index: 0; /* Image is below the video */
-}
-
-/* Button Wrapper */
-.button-wrapper {
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  z-index: 1;
+  color: #fff;
   text-align: center;
-  margin-top: 20px; /* Spacing between video and button */
-  margin-top: 35px;
 }
 
 /* Button Styling */
-.button {
-  padding: 10px 20px;
-  font-size: 18px;
-  color: white;
-  background-color: #007bff;
+.btn-primary {
+  padding: 10px 30px;
+  font-size: 1.2rem;
+  border-radius: 30px;
+  background: linear-gradient(90deg, #007bff, #00bfff);
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
 
-/* Button Hover Effect */
-.button:hover {
-  background-color: #ff0000;
-  transform: scale(1.10); /* Slight zoom effect */
-} 
+.btn-primary:hover {
+  background: linear-gradient(90deg, #00bfff, #007bff);
+  transform: scale(1.1);
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .video-wrapper {
-      height: 50vh; /* Adjust video height for smaller screens */
+  .hero-overlay h1 {
+      font-size: 2rem;
   }
-  .button {
-      font-size: 16px; /* Adjust button size */
+  .hero-overlay p {
+      font-size: 1rem;
   }
-}
-.img{
-  background-size: cover;
-  height: 600px;
-  width: 550px;
 }

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading and Video Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div id="loading-screen">
+    <div class="loading-animation">
+        <!-- Animated Dots -->
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+    <p class="loading-text">Loading...</p>
+</div>
+
+<!-- Video Section -->
+<div id="video-section" class="hidden">
+    <video id="intro-video" autoplay muted>
+        <source src="./Untitled video - Made with Clipchamp (2).mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<script>
+    // Simulate a delay to show the loading screen for at least 3 seconds
+    window.addEventListener('load', function () {
+        setTimeout(function () {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('video-section').classList.remove('hidden');
+        }, 1000); // Adjust delay as needed
+    });
+
+    // Redirect to the second page after the video ends
+    const video = document.getElementById('intro-video');
+    video.addEventListener('ended', function () {
+        window.location.href = 'second-page.html'; // Replace with the URL of your second page
+    });
+</script>
+</body>
+</html>
