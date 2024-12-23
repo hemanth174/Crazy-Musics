@@ -83,8 +83,8 @@ body, html {
 
 /* Button Hover Effect */
 .button:hover {
-  background-color: #0056b3;
-  transform: scale(1.1); /* Slight zoom effect */
+  background-color: #ff0000;
+  transform: scale(1.10); /* Slight zoom effect */
 } 
 
 /* Responsive Design */
