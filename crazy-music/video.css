@@ -35,6 +35,14 @@ body, html {
   z-index: 1;
   color: #fff;
   text-align: center;
+  
+}
+.homepagebt{
+  color:white;
+  font-family: roboto;
+  border-color:white;
+  border-style: solid;
+  
 }
 
 /* Button Styling */
