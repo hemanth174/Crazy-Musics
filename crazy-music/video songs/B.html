@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="home-page">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <img src="https://res.cloudinary.com/dqmcdmkgq/image/upload/v1734513255/our_logo_swqlob.png" height=60px width=60px style="border-radius:30px" />
+            <form action="/search" method="GET">
+                <input type="text" name="query" placeholder="Search..." />
+                <button>
+                    <span class="text">Search</span>
+                </button>
+            </form>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link" href="#">Home</a>
+                    <a class="nav-link" href="#">Features</a>
+                    <a class="nav-link" href="#">Pricing</a>
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1" onclick="display('section1')">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/a/ab/Eeswar_film_poster.jpg" class="image" />
+                        <a href="section1">
+                            <h1 class="heading"> Eeswar</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/2/20/Raghavendra_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Raghavendra</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/9/90/Varsham_2004_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Varsham</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/8/8f/Adavi_Ramudu.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Adavi Ramudu</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/3/31/Chakram_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Chakram</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/e/eb/Chhatrapati_movie_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Chatrapathi</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/7/7b/Paurnami_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Pournami</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/d/d3/Yogi.dvd.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Yogi</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/6/6b/Munna_film_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Munna</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/0/00/Bujjigaadu_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Bujjigadu</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3 balu">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/6/63/Billa_Telugu_Film_Poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Billa</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/3/31/Ek_Niranjan_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Ek Niranjan</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/b/b7/Darling_%282010%29_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Darling</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/9/92/Mr._Perfect_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Mr. Perfect</h1>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/5/50/Rebel_Movie_Poster_Prabhas.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Rebel</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/b/b9/Denikaina_Ready_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Denikaina Ready</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/a/a8/Mirchi_film_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Mirchi</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/7/7c/Action_Jackson_Poster.jpeg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Action Jackson</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/5/5f/Baahubali_The_Beginning_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Baahubali: The Beginning</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/9/93/Baahubali_2_The_Conclusion_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Baahubali 2: The Conclusion</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/6/6b/Saaho_poster.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Saaho</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/5/5a/Radhe_Shyam.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Radhe Shyam</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/c/cf/Adipurush_poster.jpeg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Adipurush</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/a/a6/Salaar_Part_1_%E2%80%93_Ceasefire.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Salaar: Part 1 – Ceasefire</h1>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+                    <div class="folder1">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/4/4c/Kalki_2898_AD.jpg" class="image" />
+                        <a href="#">
+                            <h1 class="heading">Kalki 2898 AD</h1>
+                        </a>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
