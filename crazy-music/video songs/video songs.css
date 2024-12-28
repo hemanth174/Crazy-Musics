@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Caveat:wght@400;700&family=Lobster&family=Monoton&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display+SC:ital,wght@0,400;0,700;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,700&family=Work+Sans:ital,wght@0,400;0,700;1,700&display=swap');
+
+.img {
+    height: 275px;
+    width: 250px;
+
+    border-radius: 20px;
+}
+
+.card {
+    background-color: black;
+    height: 350px;
+    width: 300px;
+    padding: 20px;
+    margin: 20px;
+
+    border-radius: 20px;
+
+}
+
+.card:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+}
+
+.img:hover {
+    filter: brightness(1.2);
+}
+
+h1 {
+    font-family: 'Lobster', cursive;
+    font-size: 24px;
+    margin-top: 15px;
+}
+
+.card a {
+    text-align: center;
+    text-decoration: none;
+}
+
+body {
+    background: linear-gradient(to right, #000428, #004e92);
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
+
+.nav-link {
+    color: white;
+    font-size: 16px;
+    margin: 0 10px;
+}
+
+.nav-link:hover {
+    color: #04d9ff;
+    text-decoration: underline;
+    font-size: 30px;
+}
+
+.card {
+    background: linear-gradient(to bottom, #232526, #414345);
+}
+
+@media (max-width: 768px) {
+    .card {
+        width: 100%;
+        height: auto;
+        margin: 10px 0;
+    }
+
+    .img {
+        height: auto;
+        width: 100%;
+    }
+}
+
+.logo {
+    height: 70px;
+    width: 70px;
+    border-radius: 30px;
+    transition: transition-delay, ;
+
+}
+
+.logo:hover {
+    height: 120px;
+    width: 120px;
+    filter: brightness(1.2);
+    transition-delay: 1s;
+
+}
+
+button {
+    color: white;
+    background-color: transparent;
+    border-width: 0px;
+}
