@@ -50,7 +50,7 @@ body, html {
   padding: 10px 30px;
   font-size: 1.2rem;
   border-radius: 30px;
-  background: linear-gradient(90deg, #007bff, #00bfff);
+  background: linear-gradient(90deg, #3a0000, #00bfff);
   border: none;
   transition: all 0.3s ease;
 }
