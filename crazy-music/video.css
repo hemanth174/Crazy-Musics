@@ -69,3 +69,11 @@ body, html {
       font-size: 1rem;
   }
 }
+@media screen and (max-width:500px) {
+    .container{
+      background-image: url("./crazy\ musics\ Image.webp");
+      height: 100vh;
+      
+    } 
+    
+}
