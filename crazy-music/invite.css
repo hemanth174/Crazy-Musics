@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.invite-container {
+    text-align: center;
+    border: 2px solid #4CAF50;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: white;
+}
+
+#inviteButton {
+    background-color: #25D366;
+    /* WhatsApp Green */
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#inviteButton:hover {
+    background-color: #128C7E;
+}

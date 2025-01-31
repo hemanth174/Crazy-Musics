@@ -190,3 +190,55 @@ h3{
     height:5vh;
     border-radius: 10px;
 }
+.image1{
+    height: 10vh;
+    margin: 10px;
+    border-radius: 20px;
+}
+
+.invite-section {
+    text-align: center;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: roboto;
+}
+
+.invite-section h2 {
+    color: #333;
+}
+
+.invite-section p {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.invite-section button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.invite-section button:hover {
+    background-color: #0056b3;
+}
+  .image2{
+    height: 10vh;
+    border-radius: 20px;
+    margin: 100px;
+
+  }     
+  .image3{
+    height: 10vh;
+    border-radius: 20px;
+    margin: 100px;
+    justify-content: space-around;
+  }      
+  
