@@ -39,7 +39,7 @@ header input[type="text"] {
     
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 50px;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     font-style: oblique;
@@ -97,15 +97,20 @@ footer {
     justify-content: space-between;
     border-radius: 10px;
     border: 2px solid darkgreen;
-}
+    position: fixed;
+    width:98%;
+
+    }
 
 .navbar-nav {
     text-align: center;
-    background-color: white;
+    background-color:white;
     border-radius: 10px;
     font-family: 'Times New Roman', Times, serif;
     font-style: oblique;
+    
 }
+
 
 .paragraph {
     text-align: center;
@@ -168,6 +173,7 @@ footer {
 .H {
     text-align: right;
     margin: 10px;
+    margin-left: 200px;
 }
 
 div {
@@ -242,4 +248,42 @@ h3{
     margin: 100px;
     justify-content: space-around;
   }      
+  @media screen and (min-width:576px), (max-width:1200px){
+      .image1{
+        height:5vh;
+        margin: 10px;
+        border-radius: 20px;
+      }
+      .image1{
+        height: 10vh;
+        margin: 10px;
+        border-radius: 20px;
+      }
+    
+  }
+  @media screen and (min-width:576px), (max-width:1200px){
+    .image2{
+      height:5vh;
+      margin: 10px;
+      border-radius: 20px;
+    }
+    .image2{
+      height: 10vh;
+      margin: 10px;
+      border-radius: 20px;
+    }
   
+}
+@media screen and (min-width:576px), (max-width:1200px){
+    .image3{
+      height:5vh;
+      margin: 10px;
+      border-radius: 20px;
+    }
+    .image3{
+      height: 10vh;
+      margin: 10px;
+      border-radius: 20px;
+    }
+  
+}
