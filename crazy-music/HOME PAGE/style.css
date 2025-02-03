@@ -197,11 +197,7 @@ h3{
     height:5vh;
     border-radius: 10px;
 }
-.image1{
-    height: 10vh;
-    margin: 10px;
-    border-radius: 20px;
-}
+
 
 .invite-section {
     text-align: center;
@@ -236,54 +232,29 @@ h3{
 .invite-section button:hover {
     background-color: #0056b3;
 }
-  .image2{
-    height: 10vh;
-    border-radius: 20px;
-    margin: 100px;
-
-  }     
-  .image3{
-    height: 10vh;
-    border-radius: 20px;
-    margin: 100px;
-    justify-content: space-around;
-  }      
-  @media screen and (min-width:576px), (max-width:1200px){
+  
+  @media screen and (min-width:320px), (max-width:1440px){
       .image1{
         height:5vh;
         margin: 10px;
         border-radius: 20px;
       }
-      .image1{
-        height: 10vh;
-        margin: 10px;
-        border-radius: 20px;
-      }
-    
   }
-  @media screen and (min-width:576px), (max-width:1200px){
+  @media screen and (min-width:320px), (max-width:1440px){
     .image2{
       height:5vh;
       margin: 10px;
       border-radius: 20px;
     }
-    .image2{
-      height: 10vh;
-      margin: 10px;
-      border-radius: 20px;
-    }
+    
   
 }
-@media screen and (min-width:576px), (max-width:1200px){
+@media screen and (min-width:320px), (max-width:1440px){
     .image3{
       height:5vh;
       margin: 10px;
       border-radius: 20px;
     }
-    .image3{
-      height: 10vh;
-      margin: 10px;
-      border-radius: 20px;
-    }
+    
   
 }
