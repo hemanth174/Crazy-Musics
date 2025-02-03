@@ -48,8 +48,6 @@ header input[type="text"] {
     border: 2px solid transparent;
   
   background-color: rgba(197, 202, 203, 0.283); /* Optional, for visibility */
-  position: relative;
-  
 }
 
 .Heading {
@@ -102,11 +100,11 @@ footer {
     border-radius: 10px;
     border: 2px solid darkgreen;
     position: fixed;
-    top:0px;
-    bottom: 0px;
-    right: 0px;
-    left:0px;
-
+     top: 0px;
+     bottom:0px;
+     left: 0px;
+     right: 0px;
+    
 
     }
     .paragraph1{
@@ -183,9 +181,8 @@ footer {
 .H {
     text-align: right;
     margin: 10px;
-   position: relative;
-   left: 50px;
-
+    position: relative;
+    left: 50px;
 }
 
 div {
@@ -199,9 +196,7 @@ div {
     border-style: solid;
     border-radius: 10px;
     padding: 10px;
-    position:relative;
-    right: 40px;
-
+    
     
     }
 h3{
