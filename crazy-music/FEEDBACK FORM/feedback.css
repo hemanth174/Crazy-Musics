@@ -1,0 +1,21 @@
+@media  screen and (min-width:768px) {
+    iframe{
+        width: 100vw;
+    }
+    
+}
+
+.CONTAINER{
+    text-align: center;
+    
+   
+}
+button{
+    background-color: aqua;
+    border: 1px solid white;
+    height: 30px;
+    width: 100px;
+    border-radius: 20px;
+    color: aliceblue;
+    
+}
