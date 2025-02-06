@@ -6,61 +6,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classic Video Page</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="./crazy musics Image.webp">
+    <link rel="icon" type="image/x-icon" href="./crazy-musics-image.webp">
+    <script defer src="script.js"></script>
 </head>
 
 <body>
     <header>
         <div class="logo">
-            <a href="./music logo design.png">
-            <img src="music logo design.png" class="img1" alt="Video Songs Logo">
-        </a>
+            <a href="./music-logo-design.png">
+                <img src="./music logo design.png" class="img1" alt="Video Songs Logo">
+            </a>
         </div>
         <input type="text" class="search-bar" placeholder="Search videos...">
     </header>
+
     <main>
         <section class="video-player">
-            
-            <video class="video" controls>
-                <source src = "./Endhuko video.mp4">
+            <video id="videoPlayer" class="video" controls>
+                <source src="./Endhuko-360p.mp4" type="video/mp4" id="videoSource">
+                Your browser does not support the video tag.
             </video>
-        
+
             <div class="video-details">
                 <h1>Endhuko Song</h1>
-                <p><span>Artist:</span> Mani Sharma</p>
-                <p><span >Description:</span> 
-                    24,363,900 views  Jun 20, 2013  #NehaSharma #Chirutha #RamCharan
-                    Watch #Chirutha Movie Video Songs (720p) Starring #RamCharan, #NehaSharma, Music by Mani Sharma, Story-Screenplay-Dialogues & Directed by Puri Jagannadh.
-                    </p>
+                <p><strong>Artist:</strong> Mani Sharma</p>
+                <p><strong>Description:</strong> 24,363,900 views · Jun 20, 2013</p>
+                <p>#NehaSharma #Chirutha #RamCharan</p>
+
+                <div class="quality-buttons">
+                    <button class="quality-btn" data-quality="360">360p</button>
+                    <button class="quality-btn" data-quality="480">480p</button>
+                    <button class="quality-btn" data-quality="720">720p</button>
+                    <button class="quality-btn" data-quality="1080">1080p</button>
+                </div>
+
+                <button class="like-button">👍 Like</button>
+                <button class="share-button">🔗 Share</button>
             </div>
         </section>
+
         <section class="related-videos">
             <h2>Next Videos</h2>
             <div class="video-grid">
                 <div class="video-item">
                     <img src="https://via.placeholder.com/150" alt="Video Thumbnail">
-                    <p> Video 1</p>
+                    <p>Video 1</p>
                 </div>
                 <div class="video-item">
                     <img src="https://via.placeholder.com/150" alt="Video Thumbnail">
-                    <p> Video 2</p>
+                    <p>Video 2</p>
                 </div>
                 <div class="video-item">
                     <img src="https://via.placeholder.com/150" alt="Video Thumbnail">
-                    <p> Video 3</p>
+                    <p>Video 3</p>
                 </div>
             </div>
-            <div class = "video2 btn btn-primary">
-                <a href = "./pawan kalyan.html">
-                    <button>Next</button>
+            <div class="video-next">
+                <a href="./index-video1-360p.html">
+                    <button>Next Video →</button>
                 </a>
             </div>
         </section>
     </main>
+
     <footer>
-        <p>&copy; 2024 video songs. All rights reserved.</p>
+        <p>&copy; 2024 Video Songs. All rights reserved.</p>
     </footer>
-   
 </body>
 
 </html>

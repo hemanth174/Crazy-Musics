@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Video Page</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="./crazy-musics-image.webp">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="./music-logo-design.png">
+                <img src="./music logo design.png" class="img1" alt="Video Songs Logo">
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <section class="video-player">
+            <video id="videoPlayer" class="video" controls>
+                <source src="./index-video-360p.mp4" type="video/mp4" id="videoSource">
+                Your browser does not support the video tag.
+            </video>
+
+            <div class="video-details">
+                <h1>#</h1>
+                <p><strong>Artist:</strong> Mani Sharma</p>
+                <p><strong>Description:</strong> 24,363,900 views · Jun 20, 2013</p>
+                <p>#NehaSharma #Chirutha #RamCharan</p>
+
+                <div class="quality-buttons">
+                    <button class="quality-btn" data-quality="360">360p</button>
+                    <button class="quality-btn" data-quality="480">480p</button>
+                    <button class="quality-btn" data-quality="720">720p</button>
+                    <button class="quality-btn" data-quality="1080">1080p</button>
+                </div>
+
+                <button class="like-button">👍 Like</button>
+                <button class="share-button">🔗 Share</button>
+            </div>
+        </section>
+
+        <section class="related-videos">
+            <div class="video-next">
+                <a href="./Chirutha.html">
+                    <button>Back →</button>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Video Songs. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const videoPlayer = document.getElementById("videoPlayer");
+            const videoSource = document.getElementById("videoSource");
+
+            const qualityButtons = document.querySelectorAll(".quality-btn");
+
+            // Video quality sources (make sure these files exist in the same folder)
+            const videoSources = {
+                "360": "./index-video-360p.mp4",
+                "480": "./index-video-480p.mp4",
+                "720": "./index-video-720p.mp4",
+                "1080": "./index-video-1080p.mp4"
+            };
+
+            qualityButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    let quality = this.getAttribute("data-quality");
+                    let currentTime = videoPlayer.currentTime;
+                    let isPlaying = !videoPlayer.paused;
+
+                    // Check if the video file exists before switching
+                    if (videoSources[quality]) {
+                        videoSource.src = videoSources[quality];
+                        videoPlayer.load();
+
+                        videoPlayer.onloadeddata = () => {
+                            videoPlayer.currentTime = currentTime;
+                            if (isPlaying) videoPlayer.play();
+                        };
+                    } else {
+                        alert("Sorry, this quality is not available.");
+                    }
+                });
+            });
+
+            document.querySelector('.like-button').addEventListener('click', function () {
+                alert('You liked this video!');
+            });
+
+            document.querySelector('.share-button').addEventListener('click', function () {
+                alert('Share link copied to clipboard!');
+            });
+        });
+    </script>
+</body>
+
+</html>
