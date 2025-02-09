@@ -111,7 +111,7 @@ footer {
         color: #ff7e5f;
     }
 .navbar-nav {
-    text-align: center;
+   text-align: center;
     background-color:white;
     border-radius: 10px;
     font-family: 'Times New Roman', Times, serif;
@@ -247,7 +247,7 @@ h3{
       .image1{
         height:5vh;
         margin: 10px;
-        border-radius: 20px;
+        border-radius: 10px;
       }
   }
   @media screen and (min-width:786px), (max-width:1440px){
@@ -280,3 +280,23 @@ h3{
     }
     
 }
+@media (max-width: 768px) {  
+    .navbar-nav {  
+      text-align: center; /* Center align text */  
+      width: 100%; /* Make the nav items take full width */  
+    }  
+    .navbar-nav .nav-link {  
+      float: none; /* Remove float for centering */  
+    }  
+  }
+  @media (max-width: 768px) {  
+    .navbar-brand img {  
+      max-height: 30px; /* Smaller image size on mobile */  
+    }  
+  }  
+  
+  @media (min-width: 769px) {  
+    .navbar-brand img {  
+      max-height: 40px; /* Larger image size on desktop */  
+    }  
+  }
