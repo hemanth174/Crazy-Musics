@@ -34,7 +34,7 @@ header input[type="text"] {
     color: #ff7e5f;
 }
 .container {
-    height: 150vh;
+    height: 50vh;
     border-color:white;
     border-style: solid;
     border-radius:20px ;
@@ -47,7 +47,7 @@ header input[type="text"] {
     font-style: oblique;
     border: 2px solid transparent;
   
-  background-color: rgba(197, 202, 203, 0.283); /* Optional, for visibility */
+  background-color: rgba(11, 142, 169, 0); /* Optional, for visibility */
 }
 
 .Heading {
@@ -112,7 +112,7 @@ footer {
     }
 .navbar-nav {
    text-align: center;
-    background-color:white;
+    background-color:rgb(224, 224, 224);
     border-radius: 10px;
     font-family: 'Times New Roman', Times, serif;
     font-style: oblique;
@@ -127,7 +127,7 @@ footer {
     padding: 20px;
     color: white;
     position: relative;
-    top: 30vh;
+   bottom: 20vh;
 }
 
 .grid {
@@ -299,4 +299,21 @@ h3{
     .navbar-brand img {  
       max-height: 40px; /* Larger image size on desktop */  
     }  
+  }
+  .C{
+    position: relative;
+    right: 140px;
+  }
+  .R{
+    position: relative;
+    bottom: 110px;
+  }
+  .M{
+    position: relative;
+    left: 150px;
+    bottom: 220px;
+    
+  }
+  .p-1{
+    color: rgb(224, 224, 224);
   }
