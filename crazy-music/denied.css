@@ -9,14 +9,14 @@ body {
 
 .invite-container {
     text-align: center;
-    border: 2px solid #4CAF50;
+    border: 2px solid #ff0000;
     padding: 20px;
     border-radius: 8px;
     background-color: white;
 }
 
 #inviteButton {
-    background-color: #25D366;
+    background-color: #d32525;
     /* WhatsApp Green */
     color: white;
     padding: 15px 30px;
