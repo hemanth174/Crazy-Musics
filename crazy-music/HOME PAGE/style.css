@@ -136,11 +136,7 @@ footer {
     color: white;
 }
 
-.containeR {
-    color: white;
-    font-size: 20px;
-   
-}
+
 
 .bi {
     color: white; /* Icon color */
@@ -194,11 +190,7 @@ div {
     
 }
 
-#search-bar {
-    border-color: #000000;
-    border-style: solid;
-    border-radius: 10px;
-    padding: 10px;
+
     
     
     }
@@ -300,20 +292,20 @@ h3{
       max-height: 40px; /* Larger image size on desktop */  
     }  
   }
+  
+  .p-1{
+    color: rgb(224, 224, 224);
+  }
   .C{
     position: relative;
-    right: 140px;
+    right: 150px;
   }
   .R{
     position: relative;
-    bottom: 110px;
+    bottom: 105px;
   }
   .M{
     position: relative;
+    bottom: 210px;
     left: 150px;
-    bottom: 220px;
-    
-  }
-  .p-1{
-    color: rgb(224, 224, 224);
   }
