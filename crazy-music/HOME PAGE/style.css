@@ -127,7 +127,7 @@ footer {
     padding: 20px;
     color: white;
     position: relative;
-   bottom: 20vh;
+    top: 30vh;
 }
 
 .grid {
@@ -193,7 +193,7 @@ div {
 
     
     
-    }
+    
 h3{
     color:black;
 }
