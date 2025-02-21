@@ -1,0 +1,43 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="stylesheet" href="styles.css"> 
+    <title>Login</title>  
+    <script>  
+        function login() {  
+            const username = document.getElementById("username").value;  
+            const password = document.getElementById("password").value;  
+            const role = document.querySelector('input[name="role"]:checked').value;  
+
+            // Retrieve credentials from local storage  
+            const storedUsername = localStorage.getItem("username_" + role);  
+            const storedPassword = localStorage.getItem("password_" + role);  
+
+            // Check credentials  
+            if (username === storedUsername && password === storedPassword) {  
+                localStorage.setItem("role", role);  
+                if (role === "admin") {  
+                    window.location.href = 'HOME%20PAGE/basics.html'; // Redirect to admin page  
+                } else {  
+                    window.location.href = "user.html"; // Redirect to user page  
+                }  
+            } else {  
+                alert("Invalid credentials. Please try again.");  
+            }  
+        }  
+    </script>  
+</head>  
+<body>  
+    <h1>Login</h1>  
+    <input type="text" id="username" placeholder="Username" required />  
+    <input type="password" id="password" placeholder="Password" required />  
+    <div>  
+        <label><input type="radio" name="role" value="admin" required /> Admin</label>  
+        <label><input type="radio" name="role" value="user" required /> User</label>  
+    </div>  
+    <button onclick="login()">Login</button>  
+    <p>Not registered? <a href="../register.html">Register here</a>.</p>  
+</body>  
+</html>

@@ -1,0 +1,117 @@
+/* Resetting default margin and padding */  
+* {  
+    box-sizing: border-box;  
+    margin: 0;  
+    padding: 0;  
+}  
+
+/* General Styles */  
+body {  
+    font-family: 'Roboto', sans-serif;  
+    background-color: #f0f2f5;  
+    color: #333;  
+    display: flex;
+    flex-direction: column;  
+    justify-content: center;  
+    align-items: center;  
+    height: 100vh;  
+}  
+
+/* Container Styles */  
+.container {  
+    max-width: 400px;  
+    width: 100%;  
+    padding: 30px;  
+    background-color: white;  
+    border-radius: 10px;  
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);  
+    animation: fadeIn 0.5s ease;  
+    display: flex;  
+    flex-direction: column; /* Aligns items vertically */  
+    align-items: center;     /* Centers items horizontally */ 
+    border-style: solid; 
+    border-color: #007bff;
+}  
+
+/* Header Styles */  
+h1 {  
+    text-align: center;  
+    margin-bottom: 20px;  
+    font-size: 28px;  
+    color: #4a4a4a;  
+}  
+
+/* Form Styles */  
+input[type="text"],  
+input[type="password"] {  
+    width: 50%;  
+    padding: 12px 15px;  
+    margin: 10px 0;  
+    border: 1px solid #ddd;  
+    border-radius: 5px;  
+    transition: border-color 0.3s;  
+}  
+
+input[type="text"]:focus,  
+input[type="password"]:focus {  
+    border-color: #007bff;  
+    outline: none;  
+}  
+
+/* Button Styles */  
+button {  
+    width: 50%;  
+    padding: 12px;  
+    background-color: #007bff;  
+    color: white;  
+    border: none;  
+    border-radius: 5px;  
+    cursor: pointer;  
+    font-size: 16px;  
+    transition: background-color 0.3s, transform 0.2s;  
+}  
+
+button:hover {  
+    background-color: #0056b3;  
+    transform: translateY(-2px);  
+}  
+
+/* Radio Button Styles */  
+input[type="radio"] {  
+    margin-right: 5px;  
+}  
+
+/* Link Styles */  
+a {  
+    color: #007bff;  
+    text-decoration: none;  
+    transition: color 0.3s;  
+}  
+
+a:hover {  
+    color: #0056b3;  
+    text-decoration: underline;  
+}  
+
+/* Message Styles */  
+p {  
+    text-align: center;  
+    color: #666;  
+}  
+
+/* Animation */  
+@keyframes fadeIn {  
+    from { opacity: 0; }  
+    to { opacity: 1; }  
+}  
+
+/* Media Queries for Responsiveness */  
+@media (max-width: 500px) {  
+    .container {  
+        padding: 20px;  
+    }  
+
+    h1 {  
+        font-size: 22px;  
+    }  
+}
