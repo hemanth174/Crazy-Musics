@@ -72,3 +72,45 @@ body, html {
       font-size: 1rem;
   }
 }
+.button-1{
+  position: relative;
+  right: 100px;
+  top: 380px;
+}
+@media  (min-width:786px) {
+  .button-1{
+    position: relative;
+    right: 400px;
+    
+  }
+  .image-1{
+    height: 10vh;
+    border-radius: 20px;
+    position: relative;
+    right: 500px;
+   
+  }
+  .H{
+    position: relative;
+    right: px;
+    color: azure;
+  }
+}
+.heading-1{
+  position: relative;
+  top: 200px;
+  border-radius: 20px;
+  position: relative;
+}
+.image-1{
+  height: 10vh;
+  border-radius: 20px;
+  position: relative;
+  
+ 
+}
+.H{
+  position: relative;
+  right: 60px;
+  color: azure;
+}
