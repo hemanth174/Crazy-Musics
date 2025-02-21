@@ -17,20 +17,32 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">  
             <a class="navbar-brand" href="#">  
                 <img src="./img-1.png" alt="Logo" class="image1" style="max-height: 40px;"> <!-- Adjust max-height as needed -->  
-                Navbar  
+                  
               </a>  
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="50" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+              </svg>
+              <input  type="text" id="search-bar" placeholder="Search your music..." />
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">  
               <span class="navbar-toggler-icon"></span>  
             </button>  
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">  
               <div class="navbar-nav ml-auto"> <!-- Use ml-auto for right alignment on larger screens -->  
-                <a class="nav-link active" href="#">  
+                <a class="nav-link active" href="../index.html">  
                   Home  
                   <span class="sr-only">(current)</span>  
+                </a> 
+                <a class="nav-link" href="./Crazy_Music_Resume.pdf">  
+                  Features 
+                  <span class="sr-only">(current)</span>  
                 </a>  
-                <a class="nav-link" href="#">Features</a>  
-                <a class="nav-link" href="#">Pricing</a>  
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>  
+                
+                <a class="nav-link" href="#">Pricing
+                  <span class="sr-only">(current)</span>
+                </a>  
+                <a class="nav-link " href="#">Disabled
+                  <span class="sr-only">(current)</span>
+                </a>  
               </div>  
             </div>  
           </nav>
@@ -58,14 +70,22 @@
                 <h1 class="heading">Welcome to "CRAZY MUSICS"</h1>
                 <p class="heading1">Search your musics</p>
                 <div class="Heading">
-                    <input type="text" id="search-bar" placeholder="Search your music..." />
+                    
                
             </header>
 
             <!-- Music Library Section -->
             
                 <div class="containeR">
-                    
+                    <a href="https://suno.com/home">
+                      <img src = "./samsung-605439_1920.jpg" class = "image1">
+                    </a>
+                    <a href="../video songs/index.html">
+                      <img src = "./crazy musics Image.webp" class = "image1">
+                    </a>
+                    <a href="./index.html">
+                      <img src = "./img-1.png" class = "image1">
+                    </a>
                     
                   <div id="music-list" class="grid"></div>
                 </div>

@@ -310,7 +310,8 @@ h3{
     left: 150px;
   }
   #search-bar{
-    
+   position:relative ;
+   right: 30px; 
     
   }
   .btn{
@@ -329,4 +330,9 @@ h3{
   .btn-1{
     position: relative;
     top: 8px;
+  }
+  .bi{
+    color: black;
+    position: relative;
+    left: 10px;text-align: center;
   }
