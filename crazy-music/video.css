@@ -86,13 +86,13 @@ body, html {
   .image-1{
     height: 10vh;
     border-radius: 20px;
-    position: relative;
-    right: 500px;
+    position: fixed;
+    
    
   }
   .H{
     position: relative;
-    right: px;
+    right: 250px;
     color: azure;
   }
 }
@@ -111,6 +111,6 @@ body, html {
 }
 .H{
   position: relative;
-  right: 60px;
+  right: 200px;
   color: azure;
 }
