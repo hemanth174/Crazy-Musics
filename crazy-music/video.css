@@ -41,9 +41,9 @@ body, html {
   
 }
 .homepagebt{
-  color:white;
-  font-family: roboto;
-  border-color:white;
+  color:rgb(0, 255, 217);
+  font-family:'Times New Roman', Times, serif;
+  border-color:rgb(255, 0, 0);
   border-style: solid;
   
 }
@@ -77,30 +77,11 @@ body, html {
   right: 100px;
   top: 380px;
 }
-@media  (min-width:786px) {
-  .button-1{
-    position: relative;
-    right: 400px;
-    
-  }
-  .image-1{
-    height: 10vh;
-    border-radius: 20px;
-    position: fixed;
-    
-   
-  }
-  .H{
-    position: relative;
-    right: 250px;
-    color: azure;
-  }
-}
 .heading-1{
   position: relative;
   top: 200px;
   border-radius: 20px;
-  position: relative;
+  
 }
 .image-1{
   height: 10vh;
@@ -111,6 +92,102 @@ body, html {
 }
 .H{
   position: relative;
-  right: 200px;
-  color: azure;
+  right: 60px;
+  color: rgb(245, 21, 21);
 }
+@media  (min-width:992px) {
+  .button-1{
+    position: relative;
+    right: 400px;
+    
+  }
+  .image-1{
+    height: 10vh;
+    border-radius: 20px;
+    position: relative;
+    
+   
+  }
+  .H{
+    position: relative;
+    right: 350px;
+    color: rgb(21, 0, 255);
+  }
+}
+navbar {
+  background: white;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+}
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+}
+.bar {
+  width: 25px;
+  height: 3px;
+  background: #333;
+  margin: 3px 0;
+}
+.nav-links {
+  display: flex;
+  list-style: none;
+}
+.nav-links li {
+  margin: 0 10px;
+}
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  padding: 8px 16px;
+  transition: 0.3s;
+}
+.nav-links a:hover {
+  color: blue;
+}
+@media (max-width: 768px) {
+  .menu-toggle {
+      display: flex;
+  }
+  .nav-links {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .nav-links.active {
+      display: flex;
+  }
+}@keyframes rgbGlow {
+  0% { color: red; }
+  25% { color: yellow; }
+  50% { color: green; }
+  75% { color: blue; }
+  100% { color: red; }
+}
+
+.logo {
+  animation: rgbGlow 3s infinite alternate;
+}
+

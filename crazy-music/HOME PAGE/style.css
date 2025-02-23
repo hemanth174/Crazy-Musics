@@ -68,7 +68,7 @@ header input[type="text"] {
 .card {
     background: #fff;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(246, 19, 19, 0.1);
     padding: 15px;
     text-align: center;
 }
@@ -91,14 +91,14 @@ footer {
 
 .navbar {
     height: 80px;
-    background-color: green;
+    background-color: #ff000000;
     opacity: 0.5; /* 50% transparency */
     color: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-radius: 10px;
-    border: 2px solid darkgreen;
+    border: 2px solid rgb(255, 0, 0);
     position: fixed;
      top: 0px;
      bottom:0px;
@@ -183,24 +183,13 @@ footer {
     left: 50px;
     top: 50px;
 }
-
 div {
-    margin: 10px;
-    
-    
-}
-
-
-    
-    
+    margin: 10px;   
+} 
     
 h3{
     color:black;
 }
-
-
-
-
 .invite-section {
     text-align: center;
     padding: 20px;
@@ -309,6 +298,22 @@ h3{
     bottom: 210px;
     left: 150px;
   }
+  @media (min-width:992px) {
+    #search-bar{
+      position: relative;
+      left: 350px;
+      height: 40px;
+      
+      border-radius: 20px;
+    }
+    .bi{
+      color: black;
+      position: relative;
+      left: 400px;
+      display:none;
+    }
+    
+  }
   #search-bar{
    position:relative ;
    right: 30px; 
@@ -334,5 +339,6 @@ h3{
   .bi{
     color: black;
     position: relative;
-    left: 10px;text-align: center;
+    left: 10px;
+    text-align: center;
   }
