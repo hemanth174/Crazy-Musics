@@ -1,0 +1,466 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.Container {
+    position: relative;
+}
+
+/* NAVBAR */
+.NavBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 70px;
+    width: 100%;
+    background-color: #0d1117;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    color: white;
+    z-index: 10000;
+}
+
+.NavBar>img {
+    height: 60px;
+}
+
+.NavBar>h1 {
+    text-align: start;
+    margin-right: 59vw;
+    /* margin-left: 2   vw; */
+}
+
+.Navlinks {
+    color: white;
+    display: flex;
+    gap: 30px;
+    font-size: 18px;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.Navlinks>p:hover {
+    border: 1px solid white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.NavButton {
+    display: flex;
+    justify-content: space-around;
+    gap: 30px;
+}
+
+.NavButton>button {
+    padding: 10px;
+    background-color: #9036e0;
+    color: white;
+    border: 1px solid white;
+    display: flex;
+    justify-content: space-around;
+    border-radius: 10px;
+    font-family: cursive;
+    cursor: pointer;
+}
+
+/* PAGE WRAPPERS */
+.FirsPage,
+.SecondPage,
+.footerPage {
+    height: 150vh;
+    position: relative;
+}
+
+/* === STICKY SECTIONS === */
+.IMG1,
+.IMG2,
+.IMG3 {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow: hidden;
+}
+
+/* PAGE 1 */
+.IMG1 {
+    background-image: url("./images/wmremove-transformed_ure6yr_e_improve,e_sharpen.png");
+    background-attachment: fixed;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    filter: contrast(110%) saturate(110%) brightness(200%);
+    z-index: 9999;
+}
+
+/* === FIXED HEADINGS CONTAINER === */
+.headings {
+    position: -webkit-sticky;
+    /* makes it stay even when page scrolls */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 5%;
+    z-index: 100;
+    /* above overlays and sections */
+    pointer-events: none;
+    /* avoids blocking scroll or nav */
+}
+
+/* === HEADING === */
+.headings>h1 {
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.05;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 30px rgba(144, 54, 224, 0.6),
+        0 0 50px rgba(144, 54, 224, 0.5);
+    letter-spacing: 2px;
+    transition: all 0.4s ease-in-out;
+    font-weight: 900;
+    font-style: italic;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    filter: contrast(110%) saturate(110%) brightness(50%);
+    pointer-events: auto;
+    /* still lets hover or text selection */
+}
+
+/* === PARAGRAPH === */
+.para {
+    font-size: clamp(1.5rem, 2vw, 3rem);
+    line-height: 1.05;
+    color: #ffffff;
+    text-align: left;
+    margin-top: 20px;
+    z-index: 2;
+    pointer-events: auto;
+}
+
+/* === BUTTON === */
+.headings>button {
+    margin-top: 30px;
+    background-color: transparent;
+    text-align: center;
+    padding: 15px 30px;
+    border-radius: 10px 30px 10px 30px;
+    border: 1px solid white;
+    color: white;
+    font-style: italic;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 2;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+.headings>button:hover {
+    background-color: white;
+    color: #9036e0;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+}
+
+/* PAGE 2 */
+.IMG2 {
+    background-image: url('./images/BG2.png');
+    background-attachment: fixed;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    filter: contrast(110%) saturate(110%) brightness(200%);
+    z-index: 9998;
+}
+
+/* === SECOND PAGE (CARDS SECTION) === */
+.cards {
+    position: fixed;
+    /* keeps cards still with background */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    /* above the dark overlay */
+    pointer-events: none;
+    /* ensures it doesn’t block scrolling */
+}
+
+/* Main heading text above cards */
+.cards h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-style: italic;
+    color: #ffffff;
+    margin-bottom: 40px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.7),
+        0 0 30px rgba(144, 54, 224, 0.7);
+    pointer-events: auto;
+}
+
+/* Three cards in a row */
+.card-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    pointer-events: auto;
+}
+
+/* Individual card style */
+.card1,
+.card2,
+.card3 {
+    width: 450px;
+    height: 450px;
+    background: rgba(0, 0, 0, 0.3);
+    /* border: 1px solid rgba(255, 255, 255, 0.3); */
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    /* padding: 25px; */
+    text-align: center;
+    color: white;
+    box-shadow: 0 0 20px rgba(144, 54, 224, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card1:hover,
+.card2:hover,
+.card3:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 30px rgba(144, 54, 224, 0.6);
+}
+
+.card1 img,
+.card2 img,
+.card3 img {
+    width: 400px;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 50px;
+}
+
+.card3 img {
+    margin-top: 40px;
+}
+
+.card1 h2,
+.card2 h2,
+.card3 h2 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #fff;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(144, 54, 224, 0.7);
+}
+
+.card1 p,
+.card2 p,
+.card3 p {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: #dcdcdc;
+}
+
+.Secondpagefooter {
+    height: 92vh;
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    justify-content: center;
+}
+
+.Secondpagefooter>button {
+    padding: 15px;
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 10px;
+    color: white;
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: 3px;
+    cursor: pointer;
+}
+.cards5{
+    filter: brightness(200%);
+}
+
+.Page3 {
+    height: 5vh;
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    justify-content: center;
+}
+
+.Page3>p {
+    padding: 15px;
+    color: white;
+    font-style: normal;
+    font-weight: 600;
+    font-family: "roboto";
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+/* PAGE 3 */
+.IMG3 {
+    background-image: url("./images/ThirdPage.png");
+    background-attachment: fixed;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    filter: contrast(100%) saturate(150%) brightness(300%);
+    z-index: 9997;
+}
+
+.Heading3>h1 {
+    display: flex;
+    color: #ffffff;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    top: 28vh;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 1.05;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 30px rgba(144, 54, 224, 0.6),
+        0 0 50px rgba(144, 54, 224, 0.5);
+    letter-spacing: 2px;
+    transition: all 0.4s ease-in-out;
+    font-weight: 900;
+    font-style: italic;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    filter: contrast(110%) saturate(110%) brightness(50%);
+    pointer-events: auto;
+}
+
+.Logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Logo>img {
+    position: relative;
+    top: 39vh;
+    height: 20vh;
+    mix-blend-mode: hard-light;
+    filter: brightness(300%);
+    border-radius: 100px;
+}
+.Icons{
+      filter: brightness(50%);
+}
+.Icons > .snapchat{
+    filter: brightness(40%);
+}
+.FotterCards {
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    gap: 4vw;
+
+}
+
+.FotterCards1,
+.FotterCards2,
+.FotterCards3 {
+    height: 30vh;
+    width: 20vw;
+    position: relative;
+    border: 3px solid #529dff;
+    /* reserve border space */
+    border-radius: 20px;
+    background:
+        linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)) padding-box;
+    background-clip: padding-box, border-box;
+    -webkit-background-clip: padding-box, border-box;
+    backdrop-filter: blur(8px);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.FotterCards2 {
+    position: relative;
+    top: 22px;
+    height: 20vh;
+    width: 30vw;
+}
+
+.Headings1 {
+    display: flex;
+    justify-content: space-around;
+}
+
+.FotterCards1>h2 {
+    letter-spacing: 3px;
+}
+
+.Fotterheading1 {
+    font-size: 30px;
+    font-style: italic;
+}
+
+.FotterCards2>h5 {
+    padding: 30px;
+    font-size: 20px;
+}
+
+.Headings1 .Column1,
+.Headings1 .Column2 {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    top: 70px;
+}
+.Ptag{
+    width: 50vw;
+}
+.Ptag > p {
+    color:#ffffff;
+    position: absolute;
+    left: 42vw;
+    bottom: 60px;
+    text-align: center;
+ font-weight: 500;
+ font-size: 20px;
+}
+
+
+
+/* === BLACK OVERLAY === */
+.IMG1::before,
+.IMG2::before,
+.IMG3::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+    z-index: 0;
+    pointer-events: none;
+}
