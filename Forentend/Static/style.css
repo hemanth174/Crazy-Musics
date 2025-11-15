@@ -13,7 +13,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    height: 70px;
+    height: 73px;
     width: 100%;
     background-color: #0d1117;
     display: flex;
@@ -24,14 +24,14 @@
     z-index: 10000;
 }
 
-.NavBar>img {
-    height: 60px;
+.Navele {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 }
 
-.NavBar>h1 {
-    text-align: start;
-    margin-right: 59vw;
-    /* margin-left: 2   vw; */
+.Navele>img {
+    height: 60px;
 }
 
 .Navlinks {
@@ -56,8 +56,12 @@
     gap: 30px;
 }
 
-.NavButton>button {
-    padding: 10px;
+.button2 {
+    margin: 20px;
+}
+
+.button2>button {
+    padding: 9px;
     background-color: #9036e0;
     color: white;
     border: 1px solid white;
@@ -298,7 +302,8 @@
     letter-spacing: 3px;
     cursor: pointer;
 }
-.cards5{
+
+.cards5 {
     filter: brightness(200%);
 }
 
@@ -367,12 +372,15 @@
     filter: brightness(300%);
     border-radius: 100px;
 }
-.Icons{
-      filter: brightness(50%);
+
+.Icons {
+    filter: brightness(50%);
 }
-.Icons > .snapchat{
+
+.Icons>.snapchat {
     filter: brightness(40%);
 }
+
 .FotterCards {
     height: 90vh;
     display: flex;
@@ -380,7 +388,7 @@
     justify-content: center;
     flex-wrap: wrap;
     position: relative;
-    gap: 4vw;
+    /* gap: 4vw; */
 
 }
 
@@ -438,17 +446,19 @@
     position: relative;
     top: 70px;
 }
-.Ptag{
+
+.Ptag {
     width: 50vw;
 }
-.Ptag > p {
-    color:#ffffff;
+
+.Ptag>p {
+    color: #ffffff;
     position: absolute;
     left: 42vw;
     bottom: 60px;
     text-align: center;
- font-weight: 500;
- font-size: 20px;
+    font-weight: 500;
+    font-size: 20px;
 }
 
 
@@ -463,4 +473,171 @@
     background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
     z-index: 0;
     pointer-events: none;
+}
+
+@media (max-width: 320px) {}
+
+
+
+/* ============================
+   Small Phones (Portrait)
+   max-width: 480px
+   ============================ */
+   @media (max-width: 425px) {
+  .FotterCards1{
+    height: 50vh;
+  }
+}
+
+
+
+
+/* ============================
+   Tablets (Portrait + Small landscape)
+   max-width: 768px
+   ============================ */
+@media (max-width: 768px) {
+    .Logo {
+        display: none;
+    }
+
+    .FotterCards {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        margin: 100px;
+    }
+
+    .FotterCards1 {
+        height: 36vh;
+        width: 35vw;
+    }
+
+    .FotterCards2 {
+        display: none;
+    }
+
+    .FotterCards3 {
+        height: 30vh;
+        width: 35vw;
+    }
+}
+
+/* ============================
+   Full HD Screens (1080p)
+   min-width: 1920px
+   ============================ */
+@media (min-width: 1024px) {
+    .FotterCards1 {
+        height: 33vh;
+        width: 24vw;
+    }
+
+    .FotterCards2 {
+        height: 23vh;
+        width: 43vw;
+    }
+
+    .Logo {
+        margin-left: 10px;
+    }
+
+    .FotterCards3 {
+        width: 25vw;
+    }
+
+    .FotterCards {
+        gap: 3vw;
+    }
+}
+
+@media (min-width: 1440px) {
+    .FotterCards3 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        letter-spacing: 5px;
+        font-size: 20px;
+    }
+}
+
+/* ============================
+   2K / QHD Screens (1440p)
+   min-width: 2560px
+   ============================ */
+@media (min-width: 2560px) {
+    .FotterCards1>h2 {
+        font-size: 40px;
+    }
+
+    .Column1,
+    .Column2>p {
+        font-size: 30px;
+    }
+
+    .FotterCards1 {
+        height: 20vh;
+    }
+
+    .FotterCards2 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        height: 20vh;
+    }
+
+    .FotterCards2>h4 {
+        font-size: 50px;
+    }
+
+    .FotterCards2>h5,
+    .FotterCards3>h4 {
+        font-size: 30px;
+    }
+
+    .FotterCards3 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        letter-spacing: 10px;
+        height: 20vh;
+    }
+
+    .Icons {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        /* height: 10vh; */
+    }
+}
+
+/* ============================
+   4K / UHD Screens
+   min-width: 3840px
+   ============================ */
+@media (min-width: 3840px) {
+    /* here you optimize for massive screens */
+}
+
+/* ============================
+   5K / 8K Ultra-Wide Screens
+   min-width: 5120px
+   ============================ */
+@media (min-width: 5120px) {
+    /* only add if needed */
+}
+
+/* ============================
+   Ultra-Wide Monitors (21:9)
+   min-aspect-ratio: 21/9
+   ============================ */
+@media (min-aspect-ratio: 21/9) {
+    /* cinematic UI fixes */
 }
