@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import apiRequest from '../api';
 import { User, Lock, Music, Apple, LogOut } from 'lucide-react';
 
@@ -10,10 +10,159 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('global hits');
+  const [songs, setSongs] = useState([]);
+  const [isSearchingSongs, setIsSearchingSongs] = useState(false);
+  const [spotifyError, setSpotifyError] = useState('');
+  const [activeQuery, setActiveQuery] = useState('global hits');
 
   useEffect(() => {
     checkAuth();
   }, []);
+
+  const fetchSongs = useCallback(async (query) => {
+    const normalizedQuery = (query || '').trim();
+    if (!normalizedQuery) {
+      setSpotifyError('Type a song, artist, or vibe to search');
+      return;
+    }
+
+    try {
+      setIsSearchingSongs(true);
+      setSpotifyError('');
+      const endpoint = `/api/search?q=${encodeURIComponent(normalizedQuery)}`;
+      const data = await apiRequest(endpoint, 'GET');
+      const items = data?.tracks?.items ?? [];
+      setSongs(items);
+      setActiveQuery(normalizedQuery);
+    } catch (error) {
+      setSpotifyError(error.message || 'Unable to reach Spotify right now');
+      setSongs([]);
+    } finally {
+      setIsSearchingSongs(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchSongs('global hits');
+  }, [fetchSongs]);
+
+  const songSection = (
+    <div className="relative z-10 w-full max-w-5xl px-6">
+      <div
+        className="relative backdrop-blur-xl bg-white/10 rounded-3xl border border-white/10 shadow-2xl p-6 md:p-8"
+        style={{ boxShadow: '0 8px 32px rgba(8, 16, 44, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.08)' }}
+      >
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold tracking-[0.45em] text-cyan-300">LIVE FROM SPOTIFY</p>
+            <h3 className="text-2xl md:text-3xl font-bold text-white mt-2">Vibe Explorer</h3>
+            <p className="text-white/60 text-sm mt-1">
+              Showing results for <span className="text-white font-semibold">{activeQuery}</span>
+            </p>
+          </div>
+          <div className="text-white/60 text-sm">
+            <span className="hidden md:inline">Powered by Spotify Search API</span>
+          </div>
+        </div>
+
+        <div className="mt-6 flex flex-col md:flex-row gap-3">
+          <div className="flex-1 relative">
+            <Music className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-300" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  fetchSongs(searchQuery);
+                }
+              }}
+              placeholder="Search by song, artist, or mood"
+              className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-cyan-400/60 focus:border-cyan-400/60"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => fetchSongs(searchQuery)}
+            disabled={isSearchingSongs}
+            className="px-6 py-4 rounded-2xl font-semibold text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{
+              background: 'linear-gradient(90deg, #06b6d4 0%, #8b5cf6 50%, #ec4899 100%)',
+              boxShadow: '0 4px 18px rgba(6, 182, 212, 0.35)'
+            }}
+          >
+            {isSearchingSongs ? 'Fetching vibes…' : 'Fetch songs'}
+          </button>
+        </div>
+
+        {spotifyError && (
+          <p className="text-red-300 text-sm mt-4">{spotifyError}</p>
+        )}
+
+        {!spotifyError && isSearchingSongs && (
+          <p className="text-white/70 text-sm mt-4">Grabbing the freshest tracks for you…</p>
+        )}
+
+        {!spotifyError && !isSearchingSongs && songs.length === 0 && (
+          <p className="text-white/70 text-sm mt-4">No tracks yet. Try another vibe.</p>
+        )}
+
+        <div className="grid gap-4 mt-6 sm:grid-cols-2 lg:grid-cols-3">
+          {songs.slice(0, 9).map((track) => {
+            const cover =
+              track?.album?.images?.[1]?.url ||
+              track?.album?.images?.[0]?.url ||
+              'https://placehold.co/200x200/0f172a/ffffff?text=%E2%99%AB';
+            const artists = track?.artists?.map((artist) => artist.name).join(', ');
+            return (
+              <div
+                key={track.id}
+                className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-3 hover:border-cyan-400/40 transition-all duration-300"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-white/10">
+                    <img src={cover} alt={track.name} className="w-full h-full object-cover" />
+                    <span className="absolute inset-0 bg-gradient-to-tr from-purple-900/30 to-transparent" />
+                  </div>
+                  <div>
+                    <p className="text-white font-semibold leading-snug">{track.name}</p>
+                    <p className="text-white/60 text-sm">{artists}</p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-xs text-white/60">
+                  <span>{track?.album?.release_date?.slice(0, 4) || '----'}</span>
+                  <div className="flex items-center gap-3">
+                    {track.preview_url && (
+                      <a
+                        href={track.preview_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-cyan-300 hover:text-cyan-200"
+                      >
+                        Preview
+                      </a>
+                    )}
+                    {track?.external_urls?.spotify && (
+                      <a
+                        href={track.external_urls.spotify}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-pink-300 hover:text-pink-200 font-semibold"
+                      >
+                        Open in Spotify
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
 
   const navigateToMusicApp = () => {
     window.location.href = '/MusicApp';
@@ -78,7 +227,7 @@ export default function Home() {
   // If user is logged in, show welcome screen
   if (isAuthenticated && user) {
     return (
-      <div className="min-h-screen w-full overflow-hidden relative flex items-center justify-center">
+      <div className="min-h-screen w-full overflow-hidden relative flex flex-col items-center justify-center gap-10 py-16 px-4">
         {/* Animated Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-cyan-900">
           <div className="absolute inset-0 opacity-30">
@@ -147,6 +296,8 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {songSection}
 
         <style jsx>{`
           @keyframes float {

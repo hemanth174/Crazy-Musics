@@ -24,50 +24,210 @@
       <h1>Welcome to Crazy Musics</h1>
       <p>Discover, stream, and enjoy your favorite tracks.</p>
     </section>
+
     <section class="playlists">
       <h2>Featured Playlists</h2>
       <div class="playlist-grid">
-        <!-- Example playlist cards -->
         <div class="playlist-card">
           <div class="card-bg" style="background-image: url('https://picsum.photos/seed/1/300/300');"></div>
-          <div class="card-info">
-            <h3>Top Hits</h3>
-            <p>50 tracks</p>
-          </div>
+          <div class="card-info"><h3>Top Hits</h3><p>50 tracks</p></div>
         </div>
         <div class="playlist-card">
           <div class="card-bg" style="background-image: url('https://picsum.photos/seed/2/300/300');"></div>
-          <div class="card-info">
-            <h3>Chill Vibes</h3>
-            <p>35 tracks</p>
-          </div>
+          <div class="card-info"><h3>Chill Vibes</h3><p>35 tracks</p></div>
         </div>
         <div class="playlist-card">
           <div class="card-bg" style="background-image: url('https://picsum.photos/seed/3/300/300');"></div>
-          <div class="card-info">
-            <h3>Workout Mix</h3>
-            <p>40 tracks</p>
-          </div>
+          <div class="card-info"><h3>Workout Mix</h3><p>40 tracks</p></div>
         </div>
         <div class="playlist-card">
           <div class="card-bg" style="background-image: url('https://picsum.photos/seed/4/300/300');"></div>
-          <div class="card-info">
-            <h3>Classic Rock</h3>
-            <p>60 tracks</p>
-          </div>
+          <div class="card-info"><h3>Classic Rock</h3><p>60 tracks</p></div>
         </div>
       </div>
+    </section>
+
+    <section class="spotify-section" id="live-tracks">
+      <div class="spotify-header">
+        <p class="pill-label">Live from JioSaavn</p>
+        <h2>Fresh drops for your vibe</h2>
+        <p>Search any Telugu, Hindi, Tamil, or English song — we pull full MP3 tracks directly from JioSaavn.</p>
+      </div>
+
+      <form class="spotify-search" id="saavnForm">
+        <input type="text" id="saavnQuery" placeholder="Search for tracks or artists..." value="sid sriram" autocomplete="off" />
+        <button type="submit" id="saavnSubmit">Fetch songs</button>
+      </form>
+
+      <p class="spotify-status" id="saavnStatus">Ready to fetch music.</p>
+      <div class="song-grid" id="songGrid" aria-live="polite"></div>
     </section>
   </main>
 
   <script>
-    // Check for token
-    const token = localStorage.getItem('token');
-    if (!token) {
-      window.location.href = 'Forentend/Templates/LoginPage.html';
-    }
-  </script>
-  <script src="script.js"></script>
-</body>
+    (function () {
+      // redirect if not logged in
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "Forentend/Templates/LoginPage.html";
+        return;
+      }
 
+      // DOM elements
+      const statusEl = document.getElementById('saavnStatus');
+      const gridEl = document.getElementById('songGrid');
+      const formEl = document.getElementById('saavnForm');
+      const queryInput = document.getElementById('saavnQuery');
+      const submitBtn = document.getElementById('saavnSubmit');
+      const FALLBACK_IMG = 'https://placehold.co/400x400/0f172a/ffffff?text=Crazy+Musics';
+
+      // status helper
+      const setStatus = (msg, error = false) => {
+        statusEl.textContent = msg;
+        statusEl.style.color = error ? "#ff6b6b" : "rgba(255,255,255,0.7)";
+      };
+
+      // Render Saavn Songs
+      const renderSongs = (tracks = []) => {
+        if (!tracks.length) {
+          gridEl.innerHTML = `<p style="color: rgba(255,255,255,0.7); text-align:center; grid-column: 1/-1;">No songs found.</p>`;
+          return;
+        }
+
+        console.log('Rendering', tracks.length, 'tracks');
+
+        const cards = tracks.slice(0, 12).map((track, index) => {
+          const cover = (track.image || FALLBACK_IMG).replace("150x150", "500x500");
+          const name = track.name || track.title || 'Unknown Track';
+          const artist = track.artists || track.subtitle || 'Unknown Artist';
+          const duration = track.duration || '180';
+          const year = track.year || '';
+          
+          return `
+            <article class="song-card" data-id="${track.id}" data-index="${index}">
+              <div class="song-card-cover">
+                <img src="${cover}" alt="${name}" loading="lazy" />
+                <button class="play-overlay" data-id="${track.id}" title="Play ${name}">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="song-meta">
+                <h3>${name}</h3>
+                <p>${artist}</p>
+              </div>
+              <div class="song-footer">
+                ${year ? `<span class="pill-label">${year}</span>` : ''}
+                <span class="pill-label">${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, '0')}</span>
+              </div>
+            </article>
+          `;
+        });
+
+        gridEl.innerHTML = cards.join("");
+
+        // Add event listener for each card
+        document.querySelectorAll(".song-card").forEach((card) => {
+          card.addEventListener("click", async (e) => {
+            try {
+              const id = card.dataset.id;
+              const index = parseInt(card.dataset.index);
+              
+              console.log('Clicked song ID:', id);
+              setStatus('Loading song details...');
+
+              const res = await fetch(`/api/saavn/song?id=${id}`);
+              
+              if (!res.ok) {
+                throw new Error(`Failed to fetch song: ${res.status}`);
+              }
+              
+              const songData = await res.json();
+              console.log('Song data:', songData);
+
+              if (!songData.media_url_320 && !songData.media_url_160) {
+                setStatus("No playable version found for this track.", true);
+                return;
+              }
+
+              // Prepare playlist for player
+              const playlist = tracks.map(t => ({
+                name: t.name || t.title || 'Unknown',
+                artists: t.artists || t.subtitle || 'Unknown Artist',
+                cover: (t.image || FALLBACK_IMG).replace("150x150", "500x500"),
+                preview: '', // Will be fetched when needed
+                id: t.id,
+                duration: t.duration || '180'
+              }));
+
+              // Store playlist and navigate
+              localStorage.setItem("currentPlaylist", JSON.stringify(playlist));
+              localStorage.setItem("currentIndex", index.toString());
+              localStorage.setItem("musicSource", "jiosaavn");
+              
+              window.location.href = `player.html?index=${index}&source=jiosaavn`;
+              
+            } catch (err) {
+              console.error('Error loading song:', err);
+              setStatus('Failed to load song: ' + err.message, true);
+            }
+          });
+        });
+      };
+
+      // fetch songs
+      const fetchSongs = async (query = "") => {
+        const trimmed = query.trim();
+        if (!trimmed) {
+          setStatus("Type something to search.");
+          return;
+        }
+
+        setStatus(`Searching for "${trimmed}"...`);
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Searching...";
+
+        try {
+          const response = await fetch(`/api/saavn/search?q=${encodeURIComponent(trimmed)}`);
+          
+          if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          console.log('JioSaavn response:', data);
+          
+          const tracks = data.songs || data || [];
+
+          if (!tracks || tracks.length === 0) {
+            setStatus(`No tracks found for "${trimmed}".`, true);
+            gridEl.innerHTML = "";
+            return;
+          }
+
+          window.currentTracks = tracks;
+          setStatus(`Showing ${tracks.length} results for "${trimmed}"`);
+          renderSongs(tracks);
+
+        } catch (err) {
+          console.error(err);
+          setStatus("Server error while fetching tracks.", true);
+        }
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Fetch songs";
+      };
+
+      // form submit
+      formEl.addEventListener("submit", (e) => {
+        e.preventDefault();
+        fetchSongs(queryInput.value);
+      });
+
+      // initial load
+      fetchSongs(queryInput.value);
+    })();
+  </script>
+</body>
 </html>

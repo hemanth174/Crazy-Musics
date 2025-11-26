@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 
 const app = express();
 const path = require('path');
@@ -10,9 +11,11 @@ const path = require('path');
 app.use(cors());
 app.use(express.json());
 
+const staticOptions = { fallthrough: true };
+
 // Serve static files from the root directory and Forentend folder
-app.use(express.static(__dirname));
-app.use('/Forentend', express.static(path.join(__dirname, 'Forentend')));
+app.use(express.static(__dirname, staticOptions));
+app.use('/Forentend', express.static(path.join(__dirname, 'Forentend'), staticOptions));
 
 // MongoDB connection with better options
 mongoose.connect(process.env.MONGO_URI, {
@@ -57,7 +60,7 @@ function parseUserAgent(userAgent) {
   const browser = userAgent.match(/(Chrome|Firefox|Safari|Edge|Opera)\/(\d+)/);
   const os = userAgent.match(/(Windows|Mac|Linux|Android|iOS)/);
   const isMobile = /Mobile|Android|iPhone/.test(userAgent);
-  
+
   return {
     browser: browser ? `${browser[1]} ${browser[2]}` : 'Unknown Browser',
     os: os ? os[1] : 'Unknown OS',
@@ -138,12 +141,12 @@ app.post("/login", async (req, res) => {
     }
 
     console.log("Login successful");
-    
+
     // Create session
     const userAgent = req.headers['user-agent'] || '';
     const { browser, os, device } = parseUserAgent(userAgent);
     const ip = req.ip || req.connection.remoteAddress;
-    
+
     await Session.create({
       userId: user._id,
       userAgent,
@@ -152,7 +155,7 @@ app.post("/login", async (req, res) => {
       device,
       ip
     });
-    
+
     return res.json({
       email: user.username, // Return username as email
       status: "ok",
@@ -211,7 +214,7 @@ app.post("/signup", async (req, res) => {
 app.get("/sessions", authenticateToken, async (req, res) => {
   try {
     const sessions = await Session.find({ userId: req.user.id }).sort({ lastActive: -1 });
-    
+
     const formattedSessions = sessions.map(session => ({
       id: session._id,
       device: session.device,
@@ -221,7 +224,7 @@ app.get("/sessions", authenticateToken, async (req, res) => {
       lastActive: session.lastActive,
       createdAt: session.createdAt
     }));
-    
+
     return res.json({
       count: formattedSessions.length,
       sessions: formattedSessions
@@ -257,7 +260,279 @@ app.delete("/user/:id", async (req, res) => {
   }
 });
 
+// ======================== JIOSAAVN API ROUTES ========================
 
+app.get("/api/saavn/search", async (req, res) => {
+  try {
+    const q = req.query.q;
+    if (!q || !q.trim()) {
+      return res.status(400).json({ error: "Query parameter 'q' is required" });
+    }
+
+    console.log('JioSaavn search for:', q);
+
+    // Use search.getResults for better results
+    const url = `https://www.jiosaavn.com/api.php?__call=search.getResults&_format=json&_marker=0&api_version=4&ctx=web6dot0&n=50&p=1&q=${encodeURIComponent(q)}`;
+
+    const response = await axios.get(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "application/json",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://www.jiosaavn.com/",
+      },
+      timeout: 10000
+    });
+
+    let parsed;
+    if (typeof response.data === 'string') {
+      const jsonStart = response.data.indexOf("{");
+      if (jsonStart === -1) {
+        throw new Error('Invalid response format from JioSaavn');
+      }
+      parsed = JSON.parse(response.data.slice(jsonStart));
+    } else {
+      parsed = response.data;
+    }
+
+    // Get results from search API
+    const results = parsed.results || parsed.songs?.data || [];
+    console.log(`Found ${results.length} results from JioSaavn`);
+
+    // Transform to match our format - filter only songs
+    const transformedSongs = results
+      .filter(item => item.type === 'song' || !item.type) // Filter only songs
+      .map(song => ({
+        id: song.id,
+        name: song.title || song.song || song.name || 'Unknown',
+        artists: song.more_info?.artistMap?.primary_artists?.map(a => a.name).join(', ') || 
+                 song.more_info?.singers || 
+                 song.subtitle || 
+                 'Unknown Artist',
+        album: song.more_info?.album || song.album || '',
+        image: (song.image || '').replace('150x150', '500x500'),
+        duration: song.more_info?.duration || song.duration || '180',
+        year: song.year || song.more_info?.release_date?.split('-')[0] || '',
+        url: song.perma_url || song.url || '',
+        language: song.language || '',
+        preview: song.more_info?.encrypted_media_url || '' // For streaming
+      }));
+
+    res.json({ songs: transformedSongs });
+
+  } catch (err) {
+    console.error("Saavn Search Error:", err.message);
+    return res.status(500).json({ 
+      error: "JioSaavn search failed", 
+      message: err.message,
+      details: err.response?.data || 'Unknown error'
+    });
+  }
+});
+
+app.get("/api/saavn/song", async (req, res) => {
+  try {
+    const id = req.query.id;
+    if (!id) {
+      return res.status(400).json({ error: "Song ID is required" });
+    }
+
+    console.log('Fetching JioSaavn song details for ID:', id);
+
+    const url = `https://www.jiosaavn.com/api.php?_format=json&__call=song.getDetails&pids=${id}`;
+
+    const response = await axios.get(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "application/json",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://www.jiosaavn.com/",
+      },
+      timeout: 10000
+    });
+
+    let parsed;
+    if (typeof response.data === 'string') {
+      const jsonStart = response.data.indexOf("{");
+      if (jsonStart === -1) {
+        throw new Error('Invalid response format from JioSaavn');
+      }
+      parsed = JSON.parse(response.data.slice(jsonStart));
+    } else {
+      parsed = response.data;
+    }
+
+    const song = parsed[id] || parsed;
+    
+    if (!song) {
+      return res.status(404).json({ error: 'Song not found' });
+    }
+
+    const encryptedUrl = song.encrypted_media_url || song.media_url || '';
+    
+    console.log('Song object keys:', Object.keys(song));
+    console.log('Encrypted URL:', encryptedUrl);
+    
+    // Try to decrypt using JioSaavn's own decryption endpoint
+    let media_url_320 = '';
+    let media_url_160 = '';
+    let media_url_96 = '';
+    
+    if (encryptedUrl) {
+      try {
+        // Use JioSaavn API to decrypt the URL
+        const decryptResponse = await axios.get(
+          `https://www.jiosaavn.com/api.php?__call=song.generateAuthToken&url=${encodeURIComponent(encryptedUrl)}&bitrate=320&api_version=4&_format=json&ctx=web6dot0`,
+          {
+            headers: {
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+              "Referer": "https://www.jiosaavn.com/",
+            },
+            timeout: 10000
+          }
+        );
+
+        let decryptedData = decryptResponse.data;
+        if (typeof decryptedData === 'string') {
+          const jsonStart = decryptedData.indexOf("{");
+          if (jsonStart !== -1) {
+            decryptedData = JSON.parse(decryptedData.slice(jsonStart));
+          }
+        }
+
+        console.log('Decrypted data:', decryptedData);
+        
+        if (decryptedData.auth_url) {
+          media_url_320 = decryptedData.auth_url;
+          media_url_160 = media_url_320.replace('_320.mp4', '_160.mp4');
+          media_url_96 = media_url_320.replace('_320.mp4', '_96.mp4');
+        }
+        
+      } catch (decryptErr) {
+        console.error('Decryption failed:', decryptErr.message);
+        // Fallback: try direct construction
+        media_url_320 = `https://aac.saavncdn.com${encryptedUrl}`.replace('_96.mp4', '_320.mp4');
+      }
+      
+      console.log('Final URLs:', { media_url_320, media_url_160, media_url_96 });
+    }
+    
+    const songDetails = {
+      id: song.id,
+      name: song.song || song.title,
+      album: song.album,
+      year: song.year,
+      duration: song.duration,
+      label: song.label,
+      primary_artists: song.primary_artists,
+      singers: song.singers,
+      image: song.image,
+      media_url_320,
+      media_url_160,
+      media_url_96,
+      perma_url: song.perma_url,
+      language: song.language,
+      encrypted_media_url: encryptedUrl // Include for debugging
+    };
+
+    return res.json(songDetails);
+
+  } catch (err) {
+    console.error("Saavn Song Error:", err.message);
+    return res.status(500).json({ 
+      error: "Failed to fetch song details", 
+      message: err.message,
+      details: err.response?.data || 'Unknown error'
+    });
+  }
+});
+
+// Proxy endpoint to stream JioSaavn audio (bypass CORS)
+app.get("/api/saavn/stream/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log('Streaming JioSaavn song ID:', id);
+
+    // First get song details
+    const songUrl = `https://www.jiosaavn.com/api.php?_format=json&__call=song.getDetails&pids=${id}`;
+    
+    const songResponse = await axios.get(songUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "application/json",
+        "Referer": "https://www.jiosaavn.com/",
+      },
+      timeout: 10000
+    });
+
+    let parsed = songResponse.data;
+    if (typeof songResponse.data === 'string') {
+      const jsonStart = songResponse.data.indexOf("{");
+      if (jsonStart !== -1) {
+        parsed = JSON.parse(songResponse.data.slice(jsonStart));
+      }
+    }
+
+    const song = parsed[id] || parsed;
+    
+    if (!song || !song.encrypted_media_url) {
+      return res.status(404).json({ error: 'Song not found or no media URL' });
+    }
+
+    // Decrypt the media URL
+    const encryptedUrl = song.encrypted_media_url;
+    const decryptUrl = `https://www.jiosaavn.com/api.php?__call=song.generateAuthToken&url=${encodeURIComponent(encryptedUrl)}&bitrate=320&api_version=4&_format=json&ctx=web6dot0&_marker=0`;
+    
+    const decryptResponse = await axios.get(decryptUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Accept": "application/json",
+        "Referer": "https://www.jiosaavn.com/",
+      }
+    });
+
+    let audioUrl = decryptResponse.data;
+    if (typeof audioUrl === 'object') {
+      audioUrl = audioUrl.auth_url || audioUrl.url;
+    }
+    if (typeof audioUrl === 'string' && audioUrl.includes('{')) {
+      const jsonStart = audioUrl.indexOf("{");
+      const parsed = JSON.parse(audioUrl.slice(jsonStart));
+      audioUrl = parsed.auth_url || parsed.url;
+    }
+
+    console.log('Decrypted audio URL:', audioUrl);
+
+    // Stream the audio file
+    const audioResponse = await axios({
+      method: 'GET',
+      url: audioUrl,
+      responseType: 'stream',
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Referer": "https://www.jiosaavn.com/",
+        "Accept": "*/*",
+      }
+    });
+
+    // Set appropriate headers
+    res.setHeader('Content-Type', 'audio/mp4');
+    res.setHeader('Accept-Ranges', 'bytes');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    
+    // Pipe the audio stream to response
+    audioResponse.data.pipe(res);
+
+  } catch (err) {
+    console.error("Saavn Stream Error:", err.message);
+    return res.status(500).json({ 
+      error: "Failed to stream audio", 
+      message: err.message
+    });
+  }
+});
+
+// ======================== END JIOSAAVN ROUTES ========================
 
 // Start server
 const PORT = process.env.PORT || 3000;

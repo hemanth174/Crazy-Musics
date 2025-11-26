@@ -49,3 +49,22 @@ Content-Type: application/json
   "email": "user@example.com",
   "pass": "MySecure@Pass123"
 }
+
+### GEt moethod
+### Ping test
+GET http://localhost:3000/
+
+### Search music (replace `arijit` if needed)
+GET http://localhost:3000/api/search?q=arijit
+
+### Another test example
+GET http://localhost:3000/api/search?q=shape of you
+
+### Test with encoded query
+GET http://localhost:3000/api/search?q=arijit%20singh
+
+###
+GET http://localhost:3000/api/saavn/search?q=sid%20sriram
+
+###
+GET http://localhost:3000/api/saavn/song?id=abcd1234
