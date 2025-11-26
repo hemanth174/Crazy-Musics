@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://crazy-musics-1.onrender.com';
 
 async function apiRequest(endpoint, method, body = null) {
     const options = {
