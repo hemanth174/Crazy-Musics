@@ -311,12 +311,17 @@
           const response = await fetch(`/api/saavn/search?q=${encodeURIComponent(trimmed)}`);
           
           if (!response.ok) {
+            console.error('Search failed with status:', response.status);
+            const errorData = await response.json().catch(() => ({}));
+            console.error('Error details:', errorData);
             throw new Error(`Server error: ${response.status}`);
           }
           
           const data = await response.json();
+          console.log('Search response:', data);
           
           const tracks = data.songs || data || [];
+          console.log('Number of tracks:', tracks.length);
 
           if (!tracks || tracks.length === 0) {
             setStatus(`No tracks found for "${trimmed}".`, true);
@@ -329,7 +334,8 @@
           renderSongs(tracks);
 
         } catch (err) {
-          setStatus("Server error while fetching tracks.", true);
+          console.error('Search error:', err);
+          setStatus(`Error: ${err.message}`, true);
         }
 
         submitBtn.disabled = false;
