@@ -3,6 +3,10 @@ const count = 10000;
 let currentState = 'sphere';
 let isAnimating = false;
 
+// Audio analysis variables
+let audioContext, analyser, dataArray, bufferLength;
+let audioInitialized = false;
+
 function init() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -26,7 +30,64 @@ function init() {
             morphToText('MUSICS');
         }, 4000);
     }, 2000);
+
+    // Try to initialize audio analysis
+    initAudioAnalysis();
 }
+
+// Initialize audio analysis for reactive particles
+function initAudioAnalysis() {
+    try {
+        // Find audio element on the page
+        const audioElements = document.querySelectorAll('audio');
+        
+        if (audioElements.length === 0) {
+            return;
+        }
+
+        const audioElement = audioElements[0];
+        
+        // Create audio context
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 512;
+        
+        const source = audioContext.createMediaElementSource(audioElement);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+        
+        bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
+        
+        audioInitialized = true;
+        
+    } catch (err) {
+        // Audio initialization pending
+    }
+}
+
+// Global function to be called from player.js when audio is created
+window.initParticleAudio = function(audioElement) {
+    if (audioInitialized || !audioElement) return;
+    
+    try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 200;
+        analyser.smoothingTimeConstant = 0.8;
+        
+        const source = audioContext.createMediaElementSource(audioElement);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+        
+        bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
+        
+        audioInitialized = true;
+    } catch (err) {
+        // Failed to initialize audio analysis
+    }
+};
 
 function createParticles() {
     const geometry = new THREE.BufferGeometry();
@@ -236,9 +297,101 @@ function morphToCircle() {
 function animate() {
     requestAnimationFrame(animate);
     
-    if (currentState === 'sphere') {
-        particles.rotation.y += 0.001;
-        particles.rotation.x += 0.0005;
+    // Audio-reactive behavior
+    if (audioInitialized && analyser && dataArray) {
+        analyser.getByteFrequencyData(dataArray);
+        
+        // Calculate frequency ranges with more detail
+        const bassRange = Math.floor(bufferLength * 0.15); // 0-15%
+        const midRange = Math.floor(bufferLength * 0.5);   // 15-50%
+        const trebleRange = bufferLength;                   // 50-100%
+        
+        // Get bass (low frequencies)
+        let bassSum = 0;
+        for (let i = 0; i < bassRange; i++) {
+            bassSum += dataArray[i];
+        }
+        const bass = (bassSum / bassRange) / 255;
+        
+        // Get mids
+        let midSum = 0;
+        for (let i = bassRange; i < midRange; i++) {
+            midSum += dataArray[i];
+        }
+        const mids = (midSum / (midRange - bassRange)) / 255;
+        
+        // Get treble (high frequencies)
+        let trebleSum = 0;
+        for (let i = midRange; i < trebleRange; i++) {
+            trebleSum += dataArray[i];
+        }
+        const treble = (trebleSum / (trebleRange - midRange)) / 255;
+        
+        // Overall average
+        const average = (bassSum + midSum + trebleSum) / bufferLength / 255;
+        
+        // React to music with dramatic effects
+        if (particles) {
+            // MUCH faster rotation based on music intensity
+            particles.rotation.y += 0.002 + (average * 0.03) + (mids * 0.02);
+            particles.rotation.x += 0.001 + (bass * 0.025);
+            particles.rotation.z += (treble * 0.015);
+            
+            // DRAMATIC scale changes based on bass - pulses with the beat
+            const scale = 1 + (bass * 0.6) + (average * 0.3);
+            particles.scale.set(scale, scale, scale);
+            
+            // Update particle colors with intense brightness changes
+            const colors = particles.geometry.attributes.color.array;
+            const positions = particles.geometry.attributes.position.array;
+            
+            for (let i = 0; i < colors.length; i += 3) {
+                // Get particle position for distance-based effects
+                const x = positions[i];
+                const y = positions[i + 1];
+                const z = positions[i + 2];
+                const distance = Math.sqrt(x*x + y*y + z*z);
+                const normalizedDistance = distance / 10;
+                
+                // Base colors (purple and cyan theme)
+                const isOdd = (i / 3) % 2 === 0;
+                const baseHue = isOdd ? 0.75 : 0.55; // Purple or Cyan
+                const color = new THREE.Color();
+                color.setHSL(
+                    baseHue + (treble * 0.15), 
+                    0.7 + (mids * 0.3),
+                    0.4 + (bass * 0.4) + (treble * 0.3) + (normalizedDistance * 0.2)
+                );
+                
+                colors[i] = color.r;
+                colors[i + 1] = color.g;
+                colors[i + 2] = color.b;
+            }
+            particles.geometry.attributes.color.needsUpdate = true;
+            
+            // MUCH larger particle size changes
+            if (particles.material) {
+                particles.material.size = 0.08 + (average * 0.3) + (bass * 0.25);
+                particles.material.opacity = 0.7 + (treble * 0.3);
+            }
+            
+            // Add camera shake effect for intense bass
+            if (bass > 0.6) {
+                camera.position.x = Math.sin(Date.now() * 0.01) * bass * 0.5;
+                camera.position.y = Math.cos(Date.now() * 0.01) * bass * 0.5;
+            } else {
+                // Smoothly return camera to center
+                camera.position.x *= 0.95;
+                camera.position.y *= 0.95;
+            }
+            camera.lookAt(scene.position);
+        }
+    } else {
+        // Default gentle rotation when no audio
+        if (currentState === 'sphere' && particles) {
+            particles.rotation.y += 0.001;
+            particles.rotation.x += 0.0005;
+        }
     }
     
     renderer.render(scene, camera);

@@ -15,9 +15,19 @@
     <nav class="nav-links">
       <a href="index.html" class="active">Home</a>
       <a href="settings.html">Settings</a>
-      <a href="login.html">Login</a>
+      <span id="userInfo" style="display: none; color: rgba(255,255,255,0.9); font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="opacity: 0.8;">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+        <span id="userName"></span>
+      </span>
+      <a href="#" id="logoutBtn" style="display: none;">Logout</a>
+      <a href="Forentend/Templates/LoginPage.html" id="loginBtn">Login</a>
     </nav>
   </header>
+
+  <!-- Hidden audio player for background playback -->
+  <audio id="backgroundAudio" style="display: none;"></audio>
 
   <main class="home">
     <section class="welcome">
@@ -25,24 +35,74 @@
       <p>Discover, stream, and enjoy your favorite tracks.</p>
     </section>
 
+    <!-- Currently Playing Section -->
+    <section class="currently-playing-section" id="currentlyPlayingSection" style="display: none;">
+      <div class="currently-playing-card">
+        <div class="now-playing-indicator">
+          <span class="pulse-dot"></span>
+          <span class="now-playing-text">NOW PLAYING</span>
+        </div>
+        <div class="currently-playing-content">
+          <img id="currentPlayingCover" src="" alt="Now Playing" />
+          <div class="current-playing-info">
+            <h3 id="currentPlayingName">Song Name</h3>
+            <p id="currentPlayingArtist">Artist Name</p>
+            <div class="mini-player-controls">
+              <button id="miniPrevBtn" class="mini-control-btn" title="Previous">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                </svg>
+              </button>
+              <button id="miniPlayPauseBtn" class="mini-control-btn play-pause-mini" title="Play/Pause">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="miniPlayIcon">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="miniPauseIcon" style="display: none;">
+                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                </svg>
+              </button>
+              <button id="miniNextBtn" class="mini-control-btn" title="Next">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                </svg>
+              </button>
+              <button id="goToPlayerBtn" class="go-to-player-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+                  <path d="M10 8v8l6-4z"/>
+                </svg>
+                Open Player
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recently Played Section -->
+    <section class="playlists" id="recentlyPlayedSection" style="display: none;">
+      <h2>📜 Listen History</h2>
+      <div class="playlist-grid" id="recentlyPlayedGrid"></div>
+    </section>
+
     <section class="playlists">
       <h2>Featured Playlists</h2>
       <div class="playlist-grid">
-        <div class="playlist-card">
+        <div class="playlist-card" data-query="arijit singh romantic hits">
           <div class="card-bg" style="background-image: url('https://picsum.photos/seed/1/300/300');"></div>
-          <div class="card-info"><h3>Top Hits</h3><p>50 tracks</p></div>
+          <div class="card-info"><h3>Romantic Hits</h3><p>Arijit Singh • Hindi</p></div>
         </div>
-        <div class="playlist-card">
+        <div class="playlist-card" data-query="sid sriram tamil melody">
           <div class="card-bg" style="background-image: url('https://picsum.photos/seed/2/300/300');"></div>
-          <div class="card-info"><h3>Chill Vibes</h3><p>35 tracks</p></div>
+          <div class="card-info"><h3>Melody Magic</h3><p>Sid Sriram • Tamil</p></div>
         </div>
-        <div class="playlist-card">
+        <div class="playlist-card" data-query="diljit dosanjh punjabi">
           <div class="card-bg" style="background-image: url('https://picsum.photos/seed/3/300/300');"></div>
-          <div class="card-info"><h3>Workout Mix</h3><p>40 tracks</p></div>
+          <div class="card-info"><h3>Punjabi Vibes</h3><p>Diljit Dosanjh • Punjabi</p></div>
         </div>
-        <div class="playlist-card">
+        <div class="playlist-card" data-query="a r rahman best songs">
           <div class="card-bg" style="background-image: url('https://picsum.photos/seed/4/300/300');"></div>
-          <div class="card-info"><h3>Classic Rock</h3><p>60 tracks</p></div>
+          <div class="card-info"><h3>Legendary Classics</h3><p>A.R. Rahman • Multi</p></div>
         </div>
       </div>
     </section>
@@ -55,7 +115,7 @@
       </div>
 
       <form class="spotify-search" id="saavnForm">
-        <input type="text" id="saavnQuery" placeholder="Search for tracks or artists..." value="sid sriram" autocomplete="off" />
+        <input type="text" id="saavnQuery" placeholder="Search for tracks or artists..."   autocomplete="off" />
         <button type="submit" id="saavnSubmit">Fetch songs</button>
       </form>
 
@@ -72,6 +132,36 @@
         window.location.href = "Forentend/Templates/LoginPage.html";
         return;
       }
+
+      // Update navbar with user info
+      const userEmail = localStorage.getItem('userEmail');
+      if (token && userEmail) {
+        document.getElementById('loginBtn').style.display = 'none';
+        document.getElementById('userInfo').style.display = 'flex';
+        document.getElementById('logoutBtn').style.display = 'block';
+        document.getElementById('userName').textContent = userEmail.split('@')[0];
+      }
+
+      // Logout functionality
+      document.getElementById('logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('token');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'Forentend/Templates/LoginPage.html';
+      });
+
+      // Featured playlists click handlers
+      document.querySelectorAll('.playlist-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const query = card.dataset.query;
+          if (query) {
+            queryInput.value = query;
+            fetchSongs(query);
+            // Smooth scroll to songs section
+            document.getElementById('live-tracks').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
 
       // DOM elements
       const statusEl = document.getElementById('saavnStatus');
@@ -90,11 +180,42 @@
       // Render Saavn Songs
       const renderSongs = (tracks = []) => {
         if (!tracks.length) {
-          gridEl.innerHTML = `<p style="color: rgba(255,255,255,0.7); text-align:center; grid-column: 1/-1;">No songs found.</p>`;
+          // Enhanced empty state with song suggestions
+          gridEl.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 3rem 1rem;">
+              <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" style="margin: 0 auto 1.5rem;">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9 9h.01M15 9h.01M9.5 13a3.5 3.5 0 005 0"></path>
+              </svg>
+              <h3 style="color: rgba(255,255,255,0.9); font-size: 1.5rem; margin-bottom: 1rem;">No songs found</h3>
+              <p style="color: rgba(255,255,255,0.6); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                Try searching for popular artists or songs below:
+              </p>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; max-width: 600px; margin: 0 auto;">
+                <button class="suggestion-chip" data-suggestion="arijit singh">Arijit Singh</button>
+                <button class="suggestion-chip" data-suggestion="sid sriram tamil">Sid Sriram</button>
+                <button class="suggestion-chip" data-suggestion="armaan malik">Armaan Malik</button>
+                <button class="suggestion-chip" data-suggestion="shreya ghoshal">Shreya Ghoshal</button>
+                <button class="suggestion-chip" data-suggestion="atif aslam">Atif Aslam</button>
+                <button class="suggestion-chip" data-suggestion="jubin nautiyal">Jubin Nautiyal</button>
+                <button class="suggestion-chip" data-suggestion="diljit dosanjh">Diljit Dosanjh</button>
+                <button class="suggestion-chip" data-suggestion="badshah">Badshah</button>
+              </div>
+            </div>
+          `;
+          
+          // Add click handlers for suggestion chips
+          document.querySelectorAll('.suggestion-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+              const suggestion = chip.dataset.suggestion;
+              queryInput.value = suggestion;
+              fetchSongs(suggestion);
+              // Scroll to results
+              document.getElementById('live-tracks').scrollIntoView({ behavior: 'smooth' });
+            });
+          });
           return;
         }
-
-        console.log('Rendering', tracks.length, 'tracks');
 
         const cards = tracks.slice(0, 12).map((track, index) => {
           const cover = (track.image || FALLBACK_IMG).replace("150x150", "500x500");
@@ -134,7 +255,6 @@
               const id = card.dataset.id;
               const index = parseInt(card.dataset.index);
               
-              console.log('Clicked song ID:', id);
               setStatus('Loading song details...');
 
               const res = await fetch(`/api/saavn/song?id=${id}`);
@@ -144,7 +264,6 @@
               }
               
               const songData = await res.json();
-              console.log('Song data:', songData);
 
               if (!songData.media_url_320 && !songData.media_url_160) {
                 setStatus("No playable version found for this track.", true);
@@ -196,7 +315,6 @@
           }
           
           const data = await response.json();
-          console.log('JioSaavn response:', data);
           
           const tracks = data.songs || data || [];
 
@@ -211,7 +329,6 @@
           renderSongs(tracks);
 
         } catch (err) {
-          console.error(err);
           setStatus("Server error while fetching tracks.", true);
         }
 
@@ -225,8 +342,255 @@
         fetchSongs(queryInput.value);
       });
 
-      // initial load
-      fetchSongs(queryInput.value);
+      // Load and display recently played songs
+      function loadRecentlyPlayed() {
+        try {
+          const history = JSON.parse(localStorage.getItem('listenHistory') || '[]');
+          
+          if (history.length === 0) {
+            document.getElementById('recentlyPlayedSection').style.display = 'none';
+            return;
+          }
+          
+          document.getElementById('recentlyPlayedSection').style.display = 'block';
+          const recentGrid = document.getElementById('recentlyPlayedGrid');
+          
+          // Show last 8 songs
+          const recentSongs = history.slice(0, 8);
+          
+          const cards = recentSongs.map((track, index) => {
+            const cover = (track.cover || track.image || FALLBACK_IMG).replace("150x150", "500x500");
+            const name = track.name || track.title || 'Unknown Track';
+            const artist = track.artists || track.subtitle || 'Unknown Artist';
+            const date = track.date || 'Recently';
+            
+            return `
+              <div class="playlist-card history-card" data-track-id="${track.id}" data-index="${index}">
+                <div class="card-bg" style="background-image: url('${cover}');"></div>
+                <div class="card-info">
+                  <h3>${name}</h3>
+                  <p>${artist}</p>
+                  <span class="pill-label" style="font-size: 0.7rem; margin-top: 0.3rem;">${date}</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+          
+          recentGrid.innerHTML = cards;
+          
+          // Add click handlers for history cards
+          document.querySelectorAll('.history-card').forEach((card) => {
+            card.addEventListener('click', async () => {
+              try {
+                const trackId = card.dataset.trackId;
+                const track = history.find(t => t.id === trackId);
+                
+                if (!track) return;
+                
+                setStatus('Loading from history...');
+                
+                // Create playlist with this song and following songs from history
+                const historyPlaylist = history.slice(0, 20).map(t => ({
+                  name: t.name || t.title || 'Unknown',
+                  artists: t.artists || t.subtitle || 'Unknown Artist',
+                  cover: (t.cover || t.image || FALLBACK_IMG).replace("150x150", "500x500"),
+                  preview: '',
+                  id: t.id,
+                  duration: t.duration || '180'
+                }));
+                
+                const clickedIndex = historyPlaylist.findIndex(t => t.id === trackId);
+                
+                // Store playlist and navigate
+                localStorage.setItem("currentPlaylist", JSON.stringify(historyPlaylist));
+                localStorage.setItem("currentIndex", clickedIndex.toString());
+                localStorage.setItem("musicSource", "jiosaavn");
+                
+                window.location.href = `player.html?index=${clickedIndex}&source=jiosaavn`;
+                
+              } catch (err) {
+                setStatus('Failed to load song from history', true);
+              }
+            });
+          });
+          
+        } catch (e) {
+          // Error loading history
+        }
+      }
+
+      // Background audio player management
+      let backgroundAudio = document.getElementById('backgroundAudio');
+      let currentPlaylist = [];
+      let currentIndex = 0;
+      let isBackgroundPlaying = false;
+
+      // Load currently playing track and continue playback
+      function loadCurrentlyPlaying() {
+        try {
+          currentPlaylist = JSON.parse(localStorage.getItem('currentPlaylist') || '[]');
+          currentIndex = parseInt(localStorage.getItem('currentIndex') || '0');
+          const isPlaying = localStorage.getItem('isCurrentlyPlaying') === 'true';
+          const audioUrl = localStorage.getItem('currentAudioUrl');
+          const savedTime = parseFloat(localStorage.getItem('currentPlaybackTime') || '0');
+          
+          if (!currentPlaylist.length || !isPlaying) {
+            document.getElementById('currentlyPlayingSection').style.display = 'none';
+            return;
+          }
+          
+          const currentTrack = currentPlaylist[currentIndex];
+          if (!currentTrack) {
+            document.getElementById('currentlyPlayingSection').style.display = 'none';
+            return;
+          }
+          
+          // Show currently playing section
+          document.getElementById('currentlyPlayingSection').style.display = 'block';
+          
+          // Update UI
+          const cover = (currentTrack.cover || currentTrack.image || FALLBACK_IMG).replace("150x150", "500x500");
+          document.getElementById('currentPlayingCover').src = cover;
+          document.getElementById('currentPlayingName').textContent = currentTrack.name || 'Unknown Track';
+          document.getElementById('currentPlayingArtist').textContent = currentTrack.artists || 'Unknown Artist';
+          
+          // Continue playing audio in background
+          if (audioUrl && isPlaying) {
+            backgroundAudio.src = audioUrl;
+            
+            // Wait for audio to be ready before setting time
+            backgroundAudio.addEventListener('loadedmetadata', () => {
+              // Set to saved time, ensuring it doesn't exceed duration
+              if (savedTime > 0 && savedTime < backgroundAudio.duration) {
+                backgroundAudio.currentTime = savedTime;
+              }
+            }, { once: true });
+            
+            const playPromise = backgroundAudio.play();
+            if (playPromise !== undefined) {
+              playPromise.then(() => {
+                isBackgroundPlaying = true;
+                document.getElementById('miniPlayIcon').style.display = 'none';
+                document.getElementById('miniPauseIcon').style.display = 'block';
+                
+                // Sync playback time
+                backgroundAudio.addEventListener('timeupdate', () => {
+                  if (isBackgroundPlaying) {
+                    localStorage.setItem('currentPlaybackTime', backgroundAudio.currentTime.toString());
+                  }
+                });
+                
+                // Handle track end
+                backgroundAudio.addEventListener('ended', () => {
+                  if (currentIndex < currentPlaylist.length - 1) {
+                    playNextTrack();
+                  } else {
+                    stopBackgroundAudio();
+                  }
+                });
+              }).catch(() => {
+                isBackgroundPlaying = false;
+              });
+            }
+          }
+          
+          // Mini player controls
+          document.getElementById('miniPlayPauseBtn').addEventListener('click', toggleBackgroundPlayback);
+          document.getElementById('miniPrevBtn').addEventListener('click', playPrevTrack);
+          document.getElementById('miniNextBtn').addEventListener('click', playNextTrack);
+          document.getElementById('goToPlayerBtn').addEventListener('click', () => {
+            const musicSource = localStorage.getItem('musicSource') || 'jiosaavn';
+            window.location.href = `player.html?index=${currentIndex}&source=${musicSource}`;
+          });
+          
+        } catch (e) {
+          // Error loading current track
+        }
+      }
+
+      function toggleBackgroundPlayback() {
+        if (isBackgroundPlaying) {
+          backgroundAudio.pause();
+          isBackgroundPlaying = false;
+          document.getElementById('miniPlayIcon').style.display = 'block';
+          document.getElementById('miniPauseIcon').style.display = 'none';
+          localStorage.setItem('isCurrentlyPlaying', 'false');
+        } else {
+          const playPromise = backgroundAudio.play();
+          if (playPromise !== undefined) {
+            playPromise.then(() => {
+              isBackgroundPlaying = true;
+              document.getElementById('miniPlayIcon').style.display = 'none';
+              document.getElementById('miniPauseIcon').style.display = 'block';
+              localStorage.setItem('isCurrentlyPlaying', 'true');
+            }).catch(() => {});
+          }
+        }
+      }
+
+      function playPrevTrack() {
+        if (currentIndex > 0) {
+          currentIndex--;
+          loadBackgroundTrack(currentIndex);
+        }
+      }
+
+      function playNextTrack() {
+        if (currentIndex < currentPlaylist.length - 1) {
+          currentIndex++;
+          loadBackgroundTrack(currentIndex);
+        }
+      }
+
+      async function loadBackgroundTrack(index) {
+        const track = currentPlaylist[index];
+        if (!track) return;
+        
+        currentIndex = index;
+        localStorage.setItem('currentIndex', index.toString());
+        
+        // Update UI
+        const cover = (track.cover || track.image || FALLBACK_IMG).replace("150x150", "500x500");
+        document.getElementById('currentPlayingCover').src = cover;
+        document.getElementById('currentPlayingName').textContent = track.name || 'Unknown Track';
+        document.getElementById('currentPlayingArtist').textContent = track.artists || 'Unknown Artist';
+        
+        // Load and play new track
+        const musicSource = localStorage.getItem('musicSource') || 'jiosaavn';
+        const audioUrl = musicSource === 'jiosaavn' ? `/api/saavn/stream/${track.id}` : track.preview;
+        
+        if (audioUrl) {
+          backgroundAudio.src = audioUrl;
+          localStorage.setItem('currentAudioUrl', audioUrl);
+          localStorage.setItem('currentPlaybackTime', '0');
+          
+          const playPromise = backgroundAudio.play();
+          if (playPromise !== undefined) {
+            playPromise.then(() => {
+              isBackgroundPlaying = true;
+              document.getElementById('miniPlayIcon').style.display = 'none';
+              document.getElementById('miniPauseIcon').style.display = 'block';
+              localStorage.setItem('isCurrentlyPlaying', 'true');
+            }).catch(() => {});
+          }
+        }
+      }
+
+      function stopBackgroundAudio() {
+        backgroundAudio.pause();
+        isBackgroundPlaying = false;
+        document.getElementById('miniPlayIcon').style.display = 'block';
+        document.getElementById('miniPauseIcon').style.display = 'none';
+        localStorage.setItem('isCurrentlyPlaying', 'false');
+        localStorage.removeItem('currentPlaybackTime');
+      }
+
+      // Show empty state initially
+      renderSongs([]);
+      
+      // Load currently playing and recently played on page load
+      loadCurrentlyPlaying();
+      loadRecentlyPlayed();
     })();
   </script>
 </body>

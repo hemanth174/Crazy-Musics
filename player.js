@@ -8,6 +8,7 @@
   let currentIndex = 0;
   let audio = null;
   let isPlaying = false;
+  let isSeeking = false;
 
   // DOM Elements
   const prevAlbum = document.getElementById('prevAlbum');
@@ -33,8 +34,6 @@
   
   // Initialize
   function init() {
-    console.log('Initializing player with source:', musicSource);
-    
     // Try to get playlist from URL or localStorage
     if (playlistJSON) {
       try {
@@ -43,7 +42,6 @@
         localStorage.setItem('currentPlaylist', playlistJSON);
         localStorage.setItem('currentIndex', currentIndex);
       } catch (e) {
-        console.error('Failed to parse playlist:', e);
         loadFromStorage();
       }
     } else {
@@ -58,6 +56,16 @@
 
     loadTrack(currentIndex);
     setupEventListeners();
+    
+    // Auto-resume if was playing
+    const wasPlaying = localStorage.getItem('isCurrentlyPlaying') === 'true';
+    if (wasPlaying) {
+      setTimeout(() => {
+        if (audio && !isPlaying) {
+          play();
+        }
+      }, 1000);
+    }
   }
 
   function loadFromStorage() {
@@ -69,7 +77,7 @@
         playlist = JSON.parse(storedPlaylist);
         currentIndex = parseInt(storedIndex || '0');
       } catch (e) {
-        console.error('Failed to load from storage:', e);
+        // Failed to load from storage
       }
     }
   }
@@ -77,22 +85,26 @@
   function showError(message) {
     trackName.textContent = 'Error';
     artistName.textContent = message;
-    console.error('Player error:', message);
   }
 
   async function loadJioSaavnTrack(track, wasPlaying) {
     try {
       artistName.textContent = 'Loading...';
-      console.log('Loading JioSaavn song:', track.id);
 
       // Use proxy endpoint to stream audio (bypass CORS)
       const audioUrl = `/api/saavn/stream/${track.id}`;
       
-      console.log('Streaming from:', audioUrl);
+      // Save audio URL for background playback on home page
+      localStorage.setItem('currentAudioUrl', audioUrl);
 
       // Create audio element
       audio = new Audio(audioUrl);
       audio.volume = volumeSlider.value / 100;
+
+      // Initialize particle audio analysis
+      if (typeof window.initParticleAudio === 'function') {
+        window.initParticleAudio(audio);
+      }
 
       audio.addEventListener('loadedmetadata', () => {
         const duration = audio.duration || parseInt(track.duration) || 180;
@@ -104,15 +116,16 @@
       audio.addEventListener('timeupdate', updateProgress);
       
       audio.addEventListener('ended', () => {
+        localStorage.removeItem('currentPlaybackTime');
         if (currentIndex < playlist.length - 1) {
           nextTrack();
         } else {
           pause();
+          localStorage.setItem('isCurrentlyPlaying', 'false');
         }
       });
 
       audio.addEventListener('error', (e) => {
-        console.error('JioSaavn audio error:', e);
         artistName.textContent = 'Failed to load audio';
         
         // Try next track if available
@@ -124,13 +137,22 @@
         }
       });
 
+      // Resume from saved position if available
+      const savedTime = parseFloat(localStorage.getItem('currentPlaybackTime') || '0');
+      if (savedTime > 0 && savedTime < (parseInt(track.duration) || 180)) {
+        audio.addEventListener('loadedmetadata', () => {
+          if (audio.duration > savedTime) {
+            audio.currentTime = savedTime;
+          }
+        }, { once: true });
+      }
+      
       // Auto-play if was playing
       if (wasPlaying) {
         play();
       }
       
     } catch (err) {
-      console.error('Error loading JioSaavn track:', err);
       artistName.textContent = 'Error: ' + err.message;
       
       // Try next track
@@ -189,8 +211,16 @@
     } else {
       // Spotify preview
       if (track.preview) {
+        // Save audio URL for background playback on home page
+        localStorage.setItem('currentAudioUrl', track.preview);
+        
         audio = new Audio(track.preview);
         audio.volume = volumeSlider.value / 100;
+
+        // Initialize particle audio analysis
+        if (typeof window.initParticleAudio === 'function') {
+          window.initParticleAudio(audio);
+        }
 
         audio.addEventListener('loadedmetadata', () => {
           durationEl.textContent = formatTime(audio.duration);
@@ -208,20 +238,26 @@
         });
 
         audio.addEventListener('error', (e) => {
-          console.error('Audio loading error:', e);
           artistName.textContent = 'Error loading track';
         });
 
+        // Resume from saved position if available
+        const savedTime = parseFloat(localStorage.getItem('currentPlaybackTime') || '0');
+        if (savedTime > 0) {
+          audio.addEventListener('loadedmetadata', () => {
+            if (audio.duration > savedTime) {
+              audio.currentTime = savedTime;
+            }
+          }, { once: true });
+        }
+        
         // Auto-play if was playing
         if (wasPlaying) {
           play();
         }
-        
-        console.log('Track loaded:', track.name, 'Preview URL:', track.preview);
       } else {
         trackName.textContent = track.name || 'Unknown Track';
         artistName.textContent = 'No preview available - Try next track';
-        console.warn('No preview URL for track:', track.name);
         
         // Automatically skip to next track with preview if was playing
         if (wasPlaying && currentIndex < playlist.length - 1) {
@@ -235,15 +271,45 @@
 
     // Save current index
     localStorage.setItem('currentIndex', currentIndex);
+    
+    // Track listen history
+    saveToListenHistory(track);
+  }
+
+  // Save track to listen history
+  function saveToListenHistory(track) {
+    try {
+      let history = JSON.parse(localStorage.getItem('listenHistory') || '[]');
+      
+      // Add timestamp to track
+      const historyEntry = {
+        ...track,
+        playedAt: new Date().toISOString(),
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      };
+      
+      // Remove duplicate if exists (same song ID)
+      history = history.filter(item => item.id !== track.id);
+      
+      // Add to beginning of array
+      history.unshift(historyEntry);
+      
+      // Keep only last 50 songs
+      if (history.length > 50) {
+        history = history.slice(0, 50);
+      }
+      
+      localStorage.setItem('listenHistory', JSON.stringify(history));
+    } catch (e) {
+      // Error saving history
+    }
   }
 
   function play() {
     if (!audio) {
-      console.warn('Play attempted but no audio object exists');
       return;
     }
     
-    console.log('Playing audio...');
     const playPromise = audio.play();
     
     if (playPromise !== undefined) {
@@ -251,9 +317,13 @@
         isPlaying = true;
         playIcon.style.display = 'none';
         pauseIcon.style.display = 'block';
-        console.log('Playback started successfully');
+        
+        // Mark as currently playing
+        localStorage.setItem('isCurrentlyPlaying', 'true');
+        
+        // Update Media Session API
+        updateMediaSession();
       }).catch(err => {
-        console.error('Playback error:', err);
         isPlaying = false;
         playIcon.style.display = 'block';
         pauseIcon.style.display = 'none';
@@ -275,6 +345,14 @@
     isPlaying = false;
     playIcon.style.display = 'block';
     pauseIcon.style.display = 'none';
+    
+    // Mark as not currently playing
+    localStorage.setItem('isCurrentlyPlaying', 'false');
+    
+    // Update Media Session API
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.playbackState = 'paused';
+    }
   }
 
   function togglePlayPause() {
@@ -291,7 +369,6 @@
   }
 
   function findAndPlayNextAvailableTrack() {
-    console.log('Searching for track with preview...');
     let searchIndex = currentIndex;
     let attempts = 0;
     const maxAttempts = playlist.length;
@@ -303,7 +380,6 @@
       }
       
       if (playlist[searchIndex]?.preview) {
-        console.log('Found track with preview:', playlist[searchIndex].name);
         currentIndex = searchIndex;
         loadTrack(currentIndex);
         setTimeout(() => play(), 100);
@@ -317,7 +393,6 @@
     // No tracks with previews found - redirect to home
     trackName.textContent = '⚠️ No Playable Tracks';
     artistName.textContent = 'These songs have no preview URLs. Try different tracks!';
-    console.warn('No tracks with preview URLs found in playlist');
     
     // Show alert and redirect after 3 seconds
     setTimeout(() => {
@@ -342,13 +417,31 @@
   }
 
   function updateProgress() {
-    if (!audio) return;
+    if (!audio || isSeeking) return;
     
     currentTimeEl.textContent = formatTime(audio.currentTime);
     progressSlider.value = audio.currentTime;
     
     const percentage = (audio.currentTime / audio.duration) * 100;
     progressFill.style.width = percentage + '%';
+    
+    // Save current playback position for resume
+    if (isPlaying) {
+      localStorage.setItem('currentPlaybackTime', audio.currentTime.toString());
+    }
+    
+    // Update Media Session position
+    if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
+      try {
+        navigator.mediaSession.setPositionState({
+          duration: audio.duration,
+          playbackRate: audio.playbackRate,
+          position: audio.currentTime
+        });
+      } catch (e) {
+        // Position state not supported
+      }
+    }
   }
 
   function seekTo(time) {
@@ -375,7 +468,26 @@
     prevBtn.addEventListener('click', prevTrack);
     nextBtn.addEventListener('click', nextTrack);
     
+    // Progress bar - allow scrubbing
+    let isSeeking = false;
+    
+    progressSlider.addEventListener('mousedown', () => {
+      isSeeking = true;
+    });
+    
+    progressSlider.addEventListener('mouseup', () => {
+      isSeeking = false;
+    });
+    
     progressSlider.addEventListener('input', (e) => {
+      if (audio) {
+        const time = parseFloat(e.target.value);
+        currentTimeEl.textContent = formatTime(time);
+        progressFill.style.width = ((time / audio.duration) * 100) + '%';
+      }
+    });
+    
+    progressSlider.addEventListener('change', (e) => {
       seekTo(parseFloat(e.target.value));
     });
 
@@ -396,6 +508,56 @@
         nextTrack();
       }
     });
+
+    // Setup Media Session API for browser controls
+    setupMediaSession();
+  }
+
+  // Media Session API for browser media controls
+  function setupMediaSession() {
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.setActionHandler('play', () => {
+        play();
+      });
+
+      navigator.mediaSession.setActionHandler('pause', () => {
+        pause();
+      });
+
+      navigator.mediaSession.setActionHandler('previoustrack', () => {
+        prevTrack();
+      });
+
+      navigator.mediaSession.setActionHandler('nexttrack', () => {
+        nextTrack();
+      });
+
+      navigator.mediaSession.setActionHandler('seekto', (details) => {
+        if (details.seekTime && audio) {
+          seekTo(details.seekTime);
+        }
+      });
+    }
+  }
+
+  function updateMediaSession() {
+    if ('mediaSession' in navigator && playlist[currentIndex]) {
+      const track = playlist[currentIndex];
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: track.name || 'Unknown Track',
+        artist: track.artists || 'Unknown Artist',
+        album: track.album || 'Crazy Musics',
+        artwork: [
+          { src: track.cover || 'https://placehold.co/96x96/0f172a/ffffff?text=CM', sizes: '96x96', type: 'image/png' },
+          { src: track.cover || 'https://placehold.co/128x128/0f172a/ffffff?text=CM', sizes: '128x128', type: 'image/png' },
+          { src: track.cover || 'https://placehold.co/256x256/0f172a/ffffff?text=CM', sizes: '256x256', type: 'image/png' },
+          { src: track.cover || 'https://placehold.co/512x512/0f172a/ffffff?text=CM', sizes: '512x512', type: 'image/png' }
+        ]
+      });
+
+      // Update playback state
+      navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+    }
   }
 
   // Start

@@ -22,20 +22,14 @@ mongoose.connect(process.env.MONGO_URI, {
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
 })
-  .then(() => console.log("MongoDB Connected ✔"))
+  .then(() => {})
   .catch(err => {
-    console.error("Mongo Error ❌:", err);
     process.exit(1);
   });
 
 // Handle MongoDB connection events
-mongoose.connection.on('disconnected', () => {
-  console.log('MongoDB disconnected');
-});
-
-mongoose.connection.on('error', (err) => {
-  console.error('MongoDB connection error:', err);
-});
+mongoose.connection.on('disconnected', () => {});
+mongoose.connection.on('error', (err) => {});
 
 
 // User Model
@@ -70,17 +64,12 @@ function parseUserAgent(userAgent) {
 
 // Debug route
 app.get("/ping", (req, res) => {
-  console.log("Ping received");
   res.send("pong");
 });
 
 // Global error handler
-process.on('uncaughtException', (err) => {
-  console.error('UNCAUGHT EXCEPTION:', err);
-});
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('UNHANDLED REJECTION:', reason);
-});
+process.on('uncaughtException', (err) => {});
+process.on('unhandledRejection', (reason, promise) => {});
 
 // -----------------------GET route (Protected)---------------------------
 const authenticateToken = (req, res, next) => {
@@ -113,11 +102,15 @@ app.get("/users", authenticateToken, async (req, res) => {
   }
 });
 
+//-------------------------- ROOT ROUTE ----------------------------
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 //-------------------------- LOGIN ROUTE ----------------------------
 app.post("/login", async (req, res) => {
   try {
     const { email, pass } = req.body;
-    console.log("Login attempt for:", email);
 
     if (!email || !pass) {
       return res.status(400).json({ message: "All fields required" });
@@ -128,7 +121,6 @@ app.post("/login", async (req, res) => {
     const user = await User.findOne({ username: email });
 
     if (!user) {
-      console.log("User not found");
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -136,11 +128,8 @@ app.post("/login", async (req, res) => {
     const valid = await bcrypt.compare(pass, user.password);
 
     if (!valid) {
-      console.log("Invalid password");
       return res.status(401).json({ message: "Incorrect password" });
     }
-
-    console.log("Login successful");
 
     // Create session
     const userAgent = req.headers['user-agent'] || '';
@@ -163,7 +152,6 @@ app.post("/login", async (req, res) => {
     });
 
   } catch (err) {
-    console.error("Login Error:", err);
     return res.status(500).json({ message: "Server error" });
   }
 });
@@ -172,7 +160,6 @@ app.post("/login", async (req, res) => {
 app.post("/signup", async (req, res) => {
   try {
     const { fullName, email, password, dob, musicGenre, favoriteArtist } = req.body;
-    console.log("Signup attempt for:", email);
 
     // 1) Required fields check
     if (!fullName || !email || !password || !dob) {
@@ -182,7 +169,6 @@ app.post("/signup", async (req, res) => {
     // 2) Check if user already exists
     const already = await User.findOne({ username: email });
     if (already) {
-      console.log("User already exists");
       return res.status(409).json({ message: "User already exists" });
     }
 
@@ -196,8 +182,6 @@ app.post("/signup", async (req, res) => {
       favoriteArtist: favoriteArtist || null
     });
 
-    console.log("User created:", newUser.username);
-
     // 4) Success
     return res.status(201).json({
       email: newUser.username,
@@ -206,7 +190,6 @@ app.post("/signup", async (req, res) => {
     });
 
   } catch (err) {
-    console.error("Signup Error:", err);
     return res.status(500).json({ message: "Server error" });
   }
 });
@@ -230,7 +213,6 @@ app.get("/sessions", authenticateToken, async (req, res) => {
       sessions: formattedSessions
     });
   } catch (err) {
-    console.error("Sessions Error:", err);
     return res.status(500).json({ message: "Server error" });
   }
 });
@@ -269,8 +251,6 @@ app.get("/api/saavn/search", async (req, res) => {
       return res.status(400).json({ error: "Query parameter 'q' is required" });
     }
 
-    console.log('JioSaavn search for:', q);
-
     // Use search.getResults for better results
     const url = `https://www.jiosaavn.com/api.php?__call=search.getResults&_format=json&_marker=0&api_version=4&ctx=web6dot0&n=50&p=1&q=${encodeURIComponent(q)}`;
 
@@ -297,7 +277,6 @@ app.get("/api/saavn/search", async (req, res) => {
 
     // Get results from search API
     const results = parsed.results || parsed.songs?.data || [];
-    console.log(`Found ${results.length} results from JioSaavn`);
 
     // Transform to match our format - filter only songs
     const transformedSongs = results
@@ -321,7 +300,6 @@ app.get("/api/saavn/search", async (req, res) => {
     res.json({ songs: transformedSongs });
 
   } catch (err) {
-    console.error("Saavn Search Error:", err.message);
     return res.status(500).json({ 
       error: "JioSaavn search failed", 
       message: err.message,
@@ -336,8 +314,6 @@ app.get("/api/saavn/song", async (req, res) => {
     if (!id) {
       return res.status(400).json({ error: "Song ID is required" });
     }
-
-    console.log('Fetching JioSaavn song details for ID:', id);
 
     const url = `https://www.jiosaavn.com/api.php?_format=json&__call=song.getDetails&pids=${id}`;
 
@@ -370,9 +346,6 @@ app.get("/api/saavn/song", async (req, res) => {
 
     const encryptedUrl = song.encrypted_media_url || song.media_url || '';
     
-    console.log('Song object keys:', Object.keys(song));
-    console.log('Encrypted URL:', encryptedUrl);
-    
     // Try to decrypt using JioSaavn's own decryption endpoint
     let media_url_320 = '';
     let media_url_160 = '';
@@ -399,8 +372,6 @@ app.get("/api/saavn/song", async (req, res) => {
             decryptedData = JSON.parse(decryptedData.slice(jsonStart));
           }
         }
-
-        console.log('Decrypted data:', decryptedData);
         
         if (decryptedData.auth_url) {
           media_url_320 = decryptedData.auth_url;
@@ -409,12 +380,9 @@ app.get("/api/saavn/song", async (req, res) => {
         }
         
       } catch (decryptErr) {
-        console.error('Decryption failed:', decryptErr.message);
         // Fallback: try direct construction
         media_url_320 = `https://aac.saavncdn.com${encryptedUrl}`.replace('_96.mp4', '_320.mp4');
       }
-      
-      console.log('Final URLs:', { media_url_320, media_url_160, media_url_96 });
     }
     
     const songDetails = {
@@ -438,7 +406,6 @@ app.get("/api/saavn/song", async (req, res) => {
     return res.json(songDetails);
 
   } catch (err) {
-    console.error("Saavn Song Error:", err.message);
     return res.status(500).json({ 
       error: "Failed to fetch song details", 
       message: err.message,
@@ -451,7 +418,6 @@ app.get("/api/saavn/song", async (req, res) => {
 app.get("/api/saavn/stream/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    console.log('Streaming JioSaavn song ID:', id);
 
     // First get song details
     const songUrl = `https://www.jiosaavn.com/api.php?_format=json&__call=song.getDetails&pids=${id}`;
@@ -501,8 +467,6 @@ app.get("/api/saavn/stream/:id", async (req, res) => {
       audioUrl = parsed.auth_url || parsed.url;
     }
 
-    console.log('Decrypted audio URL:', audioUrl);
-
     // Stream the audio file
     const audioResponse = await axios({
       method: 'GET',
@@ -524,7 +488,6 @@ app.get("/api/saavn/stream/:id", async (req, res) => {
     audioResponse.data.pipe(res);
 
   } catch (err) {
-    console.error("Saavn Stream Error:", err.message);
     return res.status(500).json({ 
       error: "Failed to stream audio", 
       message: err.message
@@ -534,9 +497,28 @@ app.get("/api/saavn/stream/:id", async (req, res) => {
 
 // ======================== END JIOSAAVN ROUTES ========================
 
+// Serve HTML pages
+app.get('/player.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'player.html'));
+});
+
+app.get('/settings.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'settings.html'));
+});
+
+app.get('/Forentend/Templates/LoginPage.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Forentend', 'Templates', 'LoginPage.html'));
+});
+
+app.get('/Forentend/Templates/RegisterPage.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Forentend', 'Templates', 'RegisterPage.html'));
+});
+
 // Start server
 const PORT = process.env.PORT || 3000;
-const server = app.listen(PORT, () => console.log(`Server Running on Port ${PORT}`));
+const server = app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 // Handle server errors
 server.on('error', (err) => {
@@ -545,11 +527,12 @@ server.on('error', (err) => {
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('SIGTERM received, closing server gracefully');
   server.close(() => {
     mongoose.connection.close(false, () => {
-      console.log('MongoDB connection closed');
       process.exit(0);
     });
   });
 });
+
+// Export for Vercel serverless (if needed)
+module.exports = app;
