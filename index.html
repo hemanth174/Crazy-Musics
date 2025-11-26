@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crazy Musics - Home</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="logo">Crazy Musics</div>
+    <nav class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="settings.html">Settings</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <main class="home">
+    <section class="welcome">
+      <h1>Welcome to Crazy Musics</h1>
+      <p>Discover, stream, and enjoy your favorite tracks.</p>
+    </section>
+    <section class="playlists">
+      <h2>Featured Playlists</h2>
+      <div class="playlist-grid">
+        <!-- Example playlist cards -->
+        <div class="playlist-card">
+          <div class="card-bg" style="background-image: url('https://picsum.photos/seed/1/300/300');"></div>
+          <div class="card-info">
+            <h3>Top Hits</h3>
+            <p>50 tracks</p>
+          </div>
+        </div>
+        <div class="playlist-card">
+          <div class="card-bg" style="background-image: url('https://picsum.photos/seed/2/300/300');"></div>
+          <div class="card-info">
+            <h3>Chill Vibes</h3>
+            <p>35 tracks</p>
+          </div>
+        </div>
+        <div class="playlist-card">
+          <div class="card-bg" style="background-image: url('https://picsum.photos/seed/3/300/300');"></div>
+          <div class="card-info">
+            <h3>Workout Mix</h3>
+            <p>40 tracks</p>
+          </div>
+        </div>
+        <div class="playlist-card">
+          <div class="card-bg" style="background-image: url('https://picsum.photos/seed/4/300/300');"></div>
+          <div class="card-info">
+            <h3>Classic Rock</h3>
+            <p>60 tracks</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Check for token
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'Forentend/Templates/LoginPage.html';
+    }
+  </script>
+  <script src="script.js"></script>
+</body>
+
+</html>

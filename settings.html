@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel='icon' href='Forentend/Static/images/APPlogo.png'>
+    <title>Settings - Crazy-Musics</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        .devices-section {
+            padding: 2rem;
+        }
+
+        .device-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .device-icon {
+            width: 40px;
+            height: 40px;
+            background: #1db954;
+            border-radius: 8px;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .device-info h4 {
+            margin: 0;
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        .device-info p {
+            margin: 0.2rem 0 0;
+            font-size: 0.85rem;
+            color: #b3b3b3;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo">Crazy Musics</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="settings.html" class="active">Settings</a>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+
+    <main class="settings">
+        <section class="devices-section">
+            <h2>Devices Logged In With This Account</h2>
+            <div id="devicesContainer">
+                <p style="color: #b3b3b3; text-align: center;">Loading devices...</p>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <button id="logoutBtn"
+                    style="background: #ff5555; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600;">Logout</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Check for token
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = 'Forentend/Templates/LoginPage.html';
+        }
+
+        // Helper function to format time ago
+        function timeAgo(dateString) {
+            const now = new Date();
+            const past = new Date(dateString);
+            const diffMs = now - past;
+            const diffSecs = Math.floor(diffMs / 1000);
+            const diffMins = Math.floor(diffSecs / 60);
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffSecs < 60) return 'Just now';
+            if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+            if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+            return past.toLocaleDateString();
+        }
+
+        // Get device icon based on device type
+        function getDeviceIcon(device) {
+            if (device === 'Mobile') return 'M';
+            return 'PC';
+        }
+
+        // Fetch and display devices
+        async function loadDevices() {
+            try {
+                const response = await fetch('http://localhost:3000/sessions', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch sessions');
+                }
+
+                const data = await response.json();
+                const container = document.getElementById('devicesContainer');
+
+                if (data.sessions.length === 0) {
+                    container.innerHTML = '<p style="color: #b3b3b3; text-align: center;">No active sessions found</p>';
+                    return;
+                }
+
+                container.innerHTML = data.sessions.map(session => `
+                    <div class="device-card">
+                        <div class="device-icon">${getDeviceIcon(session.device)}</div>
+                        <div class="device-info">
+                            <h4>${session.device} - ${session.browser}</h4>
+                            <p>${session.os} | Last active: ${timeAgo(session.lastActive)}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error loading devices:', error);
+                document.getElementById('devicesContainer').innerHTML = 
+                    '<p style="color: #ff5555; text-align: center;">Failed to load devices</p>';
+            }
+        }
+
+        // Load devices on page load
+        loadDevices();
+
+        // Refresh devices every 30 seconds
+        setInterval(loadDevices, 30000);
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userEmail');
+            window.location.href = 'Forentend/Templates/LoginPage.html';
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>

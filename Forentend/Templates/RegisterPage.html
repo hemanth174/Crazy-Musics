@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='icon' href='../Static/images/APPlogo.png'>
+    <title>Sign Up - Crazy-Musics</title>
+    <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Poppins&amp;display=swap'>
+    <link rel="stylesheet" href="../Static/Register.css">
+</head>
+
+<body>
+
+    <div class="BackButton" id="BacktoMain">
+        <img src="../Static/images/icons8-left.gif">
+        <button>Back to Main</button>
+    </div>
+
+    <div class="wrapper">
+
+        <div class="login_box">
+            <div class="login-header">
+                <span>Sign Up</span>
+            </div>
+
+            <div class="input_box">
+                <input type="text" id="fullName" placeholder=" " class="input-field" required>
+                <label for="fullName" class="label">Full Name</label>
+                <i class="bx bx-user icon"></i>
+            </div>
+
+            <div class="input_box">
+                <input type="email" id="user" placeholder=" " class="input-field" required>
+                <label for="user" class="label">Email</label>
+                <i class="bx bx-envelope icon"></i>
+            </div>
+
+            <div class="input_box">
+                <input type="password" id="password" placeholder=" " class="input-field" required minlength="10">
+                <label for="password" class="label">Password (min 10 chars)</label>
+                <i  class="bx bx-show icon"id="togglePassword"></i>
+                <small id="passwordHint"
+                    style="color: #ff6b6b; font-size: 0.75rem; margin-top: 5px; display: none;">Password must be at
+                    least 10 characters and include uppercase, lowercase, number, and special character</small>
+            </div>
+
+            <div class="input_box">
+                <input type="password" id="confirmPassword" placeholder=" " class="input-field" required>
+                <label for="confirmPassword" class="label">Confirm Password</label>
+                <i  class="bx bx-show icon" id="toggleConfirmPassword"></i>
+            </div>
+
+            <div class="input_box">
+                <input type="date" id="dob" placeholder=" " class="input-field" required>
+                <label for="dob" class="label">Date of Birth</label>
+                <i class="bx bxs-calendar icon"></i>
+            </div>
+
+            <div class="input_box">
+                <select id="musicGenre" class="input-field" style="cursor: pointer;">
+                    <option value="">Select your vibe (Optional)</option>
+                    <option value="Pop">🎤 Pop</option>
+                    <option value="Hip-Hop">🎵 Hip-Hop</option>
+                    <option value="Lofi">🎧 Lofi</option>
+                    <option value="Telugu Beats">🥁 Telugu Beats</option>
+                    <option value="Melody">🎼 Melody</option>
+                    <option value="EDM">🔊 EDM</option>
+                    <option value="Rock">🎸 Rock</option>
+                    <option value="Jazz">🎺 Jazz</option>
+                </select>
+                <label for="musicGenre" class="label" style="top: 15px;">Favorite Music Genre</label>
+                <i class="bx bx-music icon"></i>
+            </div>
+
+            <div class="input_box">
+                <input type="text" id="favoriteArtist" placeholder=" " class="input-field">
+                <label for="favoriteArtist" class="label">Favorite Artist (Optional)</label>
+                <i class="bx bxs-star icon"></i>
+            </div>
+
+            <div class="remember-forgot">
+                <div class="remember-me">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">I agree to <a href="#" style="color: #00bcd4;">Terms & Privacy Policy</a></label>
+                </div>
+            </div>
+
+            <div class="input_box" style="position: relative;">
+                <input id="submitBtn" type="submit" class="input-submit" value="Sign Up" disabled>
+                <img id="submitIcon" src="../Static/images/icons8-circled-right.gif" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; display: none;" alt="">
+            </div>
+
+            <div class="register">
+                <span>Already have an account? <a href="./LoginPage.html">Login</a></span>
+            </div>
+
+        </div>
+    </div>
+    <div id='toast'></div>
+    <script>
+        // ---------------Toast message--------------------
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.classList.add("show");
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000); // stays 3 seconds
+        }
+        function showInputToast() {
+            toast.classList.add("show");
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 10000);
+        }
+        let termsEl = document.getElementById('terms');
+        let ButtonEl = document.getElementById('submitBtn');
+        let submitIcon = document.getElementById('submitIcon');
+
+        // Password toggle functionality
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordField = document.getElementById('password');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const confirmPasswordField = document.getElementById('confirmPassword');
+
+        togglePassword.addEventListener('click', () => {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            togglePassword.classList.toggle('bx-show');
+            togglePassword.classList.toggle('bx-hide');
+        });
+
+        toggleConfirmPassword.addEventListener('click', () => {
+            const type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordField.setAttribute('type', type);
+            toggleConfirmPassword.classList.toggle('bx-show');
+            toggleConfirmPassword.classList.toggle('bx-hide');
+        });
+
+        termsEl.addEventListener('change', () => {
+            ButtonEl.disabled = !termsEl.checked;
+            if (termsEl.checked) {
+                submitIcon.style.display = 'block';
+            } else {
+                submitIcon.style.display = 'none';
+            }
+        });
+
+        // Password validation
+        function validatePassword(password) {
+            const minLength = 10;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+            if (password.length < minLength) {
+                return 'Password must be at least 10 characters long';
+            }
+            if (!hasUpperCase) {
+                return 'Password must contain at least one uppercase letter';
+            }
+            if (!hasLowerCase) {
+                return 'Password must contain at least one lowercase letter';
+            }
+            if (!hasNumber) {
+                return 'Password must contain at least one number';
+            }
+            if (!hasSpecialChar) {
+                return 'Password must contain at least one special character';
+            }
+            return null;
+        }
+
+        // Email validation
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Show password hint on focus
+        document.getElementById('password').addEventListener('focus', () => {
+            document.getElementById('passwordHint').style.display = 'block';
+        });
+
+        document.getElementById('password').addEventListener('blur', () => {
+            document.getElementById('passwordHint').style.display = 'none';
+        });
+
+        ButtonEl.addEventListener('click', async () => {
+            let fullNameEl = document.getElementById('fullName');
+            let emailEl = document.getElementById('user');
+            let passwordEl = document.getElementById('password');
+            let confirmPasswordEl = document.getElementById('confirmPassword');
+            let dobEl = document.getElementById('dob');
+            let musicGenreEl = document.getElementById('musicGenre');
+            let favoriteArtistEl = document.getElementById('favoriteArtist');
+
+            // 1) Check required fields
+            if (fullNameEl.value === '' || emailEl.value === '' || passwordEl.value === '' || confirmPasswordEl.value === '' || dobEl.value === '') {
+                toast.style.backgroundColor = 'red'
+                showToast('All required fields must be filled ⚠️');
+                return;
+            }
+
+            // 2) Validate email format
+            if (!validateEmail(emailEl.value)) {
+                showToast('Please enter a valid email address ⚠️');
+                return;
+            }
+
+            // 3) Validate password strength
+            const passwordError = validatePassword(passwordEl.value);
+            if (passwordError) {
+                showToast(passwordError + ' ⚠️');
+                return;
+            }
+
+            // 4) Check password match
+            if (passwordEl.value !== confirmPasswordEl.value) {
+                showToast('Passwords do not match ⚠️');
+                return;
+            }
+
+            // 5) Send signup request
+            try {
+                const res = await fetch('http://localhost:3000/signup', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        fullName: fullNameEl.value,
+                        email: emailEl.value,
+                        password: passwordEl.value,
+                        dob: dobEl.value,
+                        musicGenre: musicGenreEl.value || null,
+                        favoriteArtist: favoriteArtistEl.value || null
+                    })
+                });
+
+                const data = await res.json();
+
+                // 6) Backend error handling
+                if (!res.ok) {
+                    showToast(data.message || 'Server Error ⚠️');
+                    return;
+                }
+
+                // 7) Success
+                showToast('Account Created Successfully 🎉 Welcome to Crazy-Musics!');
+
+                // Redirect after signup
+                setTimeout(() => {
+                    window.location.href = "./LoginPage.html";
+                }, 1500);
+
+            } catch (err) {
+                showToast('Network Error ⚠️ Please Try Again');
+            }
+        });
+        let UserInput = document.getElementById('user');
+
+        UserInput.addEventListener("input", () => {
+            if (UserInput.value.trim() !== "") {
+                toast.innerText = "Note: Please login using your Google E-mail account only.";
+                toast.style.backgroundColor = "#ff5722";
+                showInputToast();
+            }
+        });
+        // --------------------- BacktoMain--------------------------
+        let valueBack = document.getElementById('BacktoMain');
+
+        valueBack.addEventListener('click', () => {
+            window.location.href = "./index.html";
+        })
+
+    </script>
+
+</body>
+
+</html>

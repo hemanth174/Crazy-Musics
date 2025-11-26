@@ -1,0 +1,10 @@
+/* Root style.css - imports main stylesheet */
+@import url('./Forentend/Static/style.css');
+
+/* Additional root-level styles if needed */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #121212;
+  color: #fff;
+}
