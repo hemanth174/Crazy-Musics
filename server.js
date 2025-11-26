@@ -8,7 +8,13 @@ const axios = require('axios');
 const app = express();
 const path = require('path');
 
-app.use(cors());
+// CORS configuration
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json());
 
 const staticOptions = { fallthrough: true };
@@ -251,6 +257,8 @@ app.get("/api/saavn/search", async (req, res) => {
       return res.status(400).json({ error: "Query parameter 'q' is required" });
     }
 
+    console.log(`[JioSaavn Search] Query: ${q}`);
+
     // Use search.getResults for better results
     const url = `https://www.jiosaavn.com/api.php?__call=search.getResults&_format=json&_marker=0&api_version=4&ctx=web6dot0&n=50&p=1&q=${encodeURIComponent(q)}`;
 
@@ -261,8 +269,13 @@ app.get("/api/saavn/search", async (req, res) => {
         "Accept-Language": "en-US,en;q=0.9",
         "Referer": "https://www.jiosaavn.com/",
       },
-      timeout: 10000
+      timeout: 15000,
+      validateStatus: function (status) {
+        return status >= 200 && status < 500;
+      }
     });
+
+    console.log(`[JioSaavn Search] Response status: ${response.status}`);
 
     let parsed;
     if (typeof response.data === 'string') {
@@ -297,13 +310,18 @@ app.get("/api/saavn/search", async (req, res) => {
         preview: song.more_info?.encrypted_media_url || '' // For streaming
       }));
 
+    console.log(`[JioSaavn Search] Found ${transformedSongs.length} songs`);
     res.json({ songs: transformedSongs });
 
   } catch (err) {
+    console.error('[JioSaavn Search Error]:', err.message);
+    console.error('[JioSaavn Search Error Details]:', err.response?.data || 'No details');
+    
     return res.status(500).json({ 
       error: "JioSaavn search failed", 
       message: err.message,
-      details: err.response?.data || 'Unknown error'
+      details: err.response?.data || 'Unknown error',
+      query: req.query.q
     });
   }
 });
