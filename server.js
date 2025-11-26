@@ -310,8 +310,18 @@ app.get("/api/saavn/search", async (req, res) => {
         preview: song.more_info?.encrypted_media_url || '' // For streaming
       }));
 
-    console.log(`[JioSaavn Search] Found ${transformedSongs.length} songs`);
-    res.json({ songs: transformedSongs });
+    // Remove duplicates based on song ID
+    const uniqueSongs = [];
+    const seenIds = new Set();
+    for (const song of transformedSongs) {
+      if (!seenIds.has(song.id)) {
+        seenIds.add(song.id);
+        uniqueSongs.push(song);
+      }
+    }
+
+    console.log(`[JioSaavn Search] Found ${uniqueSongs.length} unique songs (${transformedSongs.length} total)`);
+    res.json({ songs: uniqueSongs });
 
   } catch (err) {
     console.error('[JioSaavn Search Error]:', err.message);
