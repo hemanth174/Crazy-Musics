@@ -92,7 +92,8 @@
     const token = localStorage.getItem('token');
     if (token) {
       // User is already logged in, redirect to home
-      window.location.href = '../../index.html';
+      // PATH: From Forentend/Templates -> go up 2 levels -> MAIN/index.html
+      window.location.href = '../../MAIN/index.html';
     }
 
     // Page fade-in animation
@@ -211,8 +212,9 @@
         ButtonEl.value = 'Success!';
 
         // Redirect to Home page after 1.5 seconds
+        // PATH: From Forentend/Templates -> go up 2 levels -> MAIN/index.html
         setTimeout(() => {
-          window.location.href = '../../index.html';
+          window.location.href = '../../MAIN/index.html';
         }, 1500);
 
       } catch (err) {
@@ -237,9 +239,11 @@
       }
     });
 
+    // Back to Main button - go to home page
+    // PATH: From Forentend/Templates -> go up 2 levels -> MAIN/index.html
     let valueBack = document.getElementById('BacktoMain');
     valueBack.addEventListener('click', () => {
-      window.location.href = "./index.html";
+      window.location.href = "../../MAIN/index.html";
     });
   </script>
 

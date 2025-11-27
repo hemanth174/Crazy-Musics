@@ -1,25 +1,43 @@
+// ============================================================================
+// CRAZY MUSICS HOME PAGE - Main landing and authentication page
+// ============================================================================
+// This React component handles:
+// - User login/signup authentication
+// - Music search and display from Spotify API
+// - User session management
+// - Beautiful glassmorphic UI with animations
+// ============================================================================
+
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import apiRequest from '../api';
+import apiRequest from './api';
 import { User, Lock, Music, Apple, LogOut } from 'lucide-react';
 
+// ========== Main Home Component ==========
 export default function Home() {
+  // ========== State Management ==========
+  // Authentication state
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  // Music search state
   const [searchQuery, setSearchQuery] = useState('global hits');
   const [songs, setSongs] = useState([]);
   const [isSearchingSongs, setIsSearchingSongs] = useState(false);
   const [spotifyError, setSpotifyError] = useState('');
   const [activeQuery, setActiveQuery] = useState('global hits');
 
+  // ========== Check Authentication on Component Mount ==========
   useEffect(() => {
     checkAuth();
   }, []);
 
+  // ========== Fetch Songs from Spotify API ==========
+  // Searches for songs based on user query
   const fetchSongs = useCallback(async (query) => {
     const normalizedQuery = (query || '').trim();
     if (!normalizedQuery) {
@@ -43,6 +61,8 @@ export default function Home() {
     }
   }, []);
 
+  // ========== Load Default Songs on Page Load ==========
+  // Fetch 'global hits' when component first loads
   useEffect(() => {
     fetchSongs('global hits');
   }, [fetchSongs]);
@@ -164,24 +184,29 @@ export default function Home() {
     </div>
   );
 
+  // ========== Navigate to Music App ==========
+  // Redirects authenticated user to main music player
   const navigateToMusicApp = () => {
     window.location.href = '/MusicApp';
   };
 
+  // ========== Check User Authentication Status ==========
+  // Verifies if user has valid JWT token in localStorage
   const checkAuth = async () => {
     const token = localStorage.getItem('token');
     if (token) {
       try {
-        // You might need a /me or /verify endpoint on your server
-        // For now, we'll just assume the token is valid if it exists
+        // Token exists - assume user is authenticated
+        // TODO: Add /me or /verify endpoint to validate token with server
         setIsAuthenticated(true);
-        // You could also decode the token to get user info if not fetching from a /me endpoint
       } catch (error) {
         setIsAuthenticated(false);
       }
     }
   };
 
+  // ========== Handle User Login ==========
+  // Submits login credentials to server and stores JWT token
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -196,10 +221,14 @@ export default function Home() {
     }
   };
 
+  // ========== Handle User Signup ==========
+  // Creates new account and automatically logs in user
   const handleSignUp = async () => {
     try {
-      await apiRequest('/signup', 'POST', { username, password, dob: '2000-01-01' }); // Assuming a default DOB for now
-      // Optionally, automatically log in the user after signup
+      // Create account with default DOB (should be collected from user in production)
+      await apiRequest('/signup', 'POST', { username, password, dob: '2000-01-01' });
+      
+      // Automatically log in after successful signup
       const data = await apiRequest('/login', 'POST', { email: username, pass: password });
       localStorage.setItem('token', data.token);
       checkAuth();
@@ -208,23 +237,32 @@ export default function Home() {
     }
   };
 
+  // ========== Handle User Logout ==========
+  // Clears authentication token and resets user state
   const handleLogout = () => {
     localStorage.removeItem('token');
     setUser(null);
     setIsAuthenticated(false);
   };
 
+  // ========== Fetch User Profile When Authenticated ==========
+  // Retrieves user information from server after successful login
   useEffect(() => {
     if (isAuthenticated) {
       apiRequest('/me')
         .then(setUser)
         .catch(() => {
+          // If fetch fails, log user out
           handleLogout();
         });
     }
   }, [isAuthenticated]);
 
-  // If user is logged in, show welcome screen
+  // ========== Render Logic ==========
+  // Show different UI based on authentication status
+  
+  // ========== Authenticated User View ==========
+  // Display welcome screen with music search for logged-in users
   if (isAuthenticated && user) {
     return (
       <div className="min-h-screen w-full overflow-hidden relative flex flex-col items-center justify-center gap-10 py-16 px-4">

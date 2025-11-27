@@ -104,7 +104,8 @@
         const token = localStorage.getItem('token');
         if (token) {
             // User is already logged in, redirect to home
-            window.location.href = '../../index.html';
+            // PATH: From Forentend/Templates -> go up 2 levels -> MAIN/index.html
+            window.location.href = '../../MAIN/index.html';
         }
 
         // ---------------Toast message--------------------
@@ -280,10 +281,11 @@
             }
         });
         // --------------------- BacktoMain--------------------------
+        // PATH: From Forentend/Templates -> go up 2 levels -> MAIN/index.html
         let valueBack = document.getElementById('BacktoMain');
 
         valueBack.addEventListener('click', () => {
-            window.location.href = "./index.html";
+            window.location.href = "../../MAIN/index.html";
         })
 
     </script>

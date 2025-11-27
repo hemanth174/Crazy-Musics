@@ -1,63 +1,98 @@
-require("dotenv").config();
+// ============================================================================
+// CRAZY MUSICS SERVER - Main backend server
+// ============================================================================
+// This Express.js server handles:
+// - User authentication (login/signup with JWT tokens)
+// - MongoDB database operations
+// - JioSaavn API integration for music streaming
+// - Session tracking across devices
+// - Serving static frontend files
+// ============================================================================
+
+// Load environment variables from .env file
+// PATH: .env file is in MAIN folder (go up one level from Servers, then into MAIN)
+const path = require('path');
+require("dotenv").config({ path: path.join(__dirname, '..', 'MAIN', '.env') });
+
+// Import required dependencies
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
+// path already imported above
 
+// Initialize Express application
 const app = express();
-const path = require('path');
 
-// CORS configuration
+// ========== CORS Configuration ==========
+// Enable Cross-Origin Resource Sharing for API access
 app.use(cors({
-  origin: '*',
+  origin: '*',                    // Allow all origins
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
+
+// Parse JSON request bodies
 app.use(express.json());
 
+// ========== Static File Serving ==========
+// Serve frontend files from MAIN folder and Forentend folder
+// PATH: MAIN folder contains index.html, player.html, etc.
+// PATH: Forentend folder contains Templates and Static subfolders
 const staticOptions = { fallthrough: true };
+app.use(express.static(path.join(__dirname, '..', 'MAIN'), staticOptions));
+app.use('/Forentend', express.static(path.join(__dirname, '..', 'Forentend'), staticOptions));
 
-// Serve static files from the root directory and Forentend folder
-app.use(express.static(__dirname, staticOptions));
-app.use('/Forentend', express.static(path.join(__dirname, 'Forentend'), staticOptions));
-
-// MongoDB connection with better options
+// ========== MongoDB Database Connection ==========
+// Connect to MongoDB Atlas using connection string from environment variables
 mongoose.connect(process.env.MONGO_URI, {
-  serverSelectionTimeoutMS: 5000,
-  socketTimeoutMS: 45000,
+  serverSelectionTimeoutMS: 5000,  // Timeout for initial server selection
+  socketTimeoutMS: 45000,          // Timeout for socket operations
 })
-  .then(() => {})
+  .then(() => {
+    // Successfully connected to database
+  })
   .catch(err => {
+    // Failed to connect - exit application
     process.exit(1);
   });
 
-// Handle MongoDB connection events
-mongoose.connection.on('disconnected', () => {});
-mongoose.connection.on('error', (err) => {});
+// Handle MongoDB connection lifecycle events
+mongoose.connection.on('disconnected', () => {
+  // Database connection lost
+});
+mongoose.connection.on('error', (err) => {
+  // Database error occurred
+});
 
+// ========== Database Models ==========
+// Import User model for authentication
+// PATH: User model is in MAIN/models folder (go up one level from Servers, then into MAIN/models)
+const User = require("../MAIN/models/User");
 
-// User Model
-const User = require("./models/User");
-
-// Session Schema for tracking devices
+// ========== Session Schema ==========
+// Tracks user login sessions across different devices
+// Sessions automatically expire after 7 days
 const SessionSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  userAgent: { type: String },
-  browser: { type: String },
-  os: { type: String },
-  device: { type: String },
-  ip: { type: String },
+  userAgent: { type: String },     // Full user agent string
+  browser: { type: String },       // Parsed browser name and version
+  os: { type: String },            // Operating system
+  device: { type: String },        // Device type (Mobile/Desktop)
+  ip: { type: String },            // IP address
   lastActive: { type: Date, default: Date.now },
-  createdAt: { type: Date, default: Date.now, expires: 604800 } // 7 days
+  createdAt: { type: Date, default: Date.now, expires: 604800 } // Auto-delete after 7 days (604800 seconds)
 });
 
 const Session = mongoose.model('Session', SessionSchema);
 
-// Helper function to parse user agent
+// ========== Parse User Agent String ==========
+// Extracts browser, OS, and device type from user agent string
+// Used for session tracking and device management
 function parseUserAgent(userAgent) {
-  const browser = userAgent.match(/(Chrome|Firefox|Safari|Edge|Opera)\/(\d+)/);
+  const browser = userAgent.match(/(Chrome|Firefox|Safari|Edge|Opera)\/\/(\d+)/);
   const os = userAgent.match(/(Windows|Mac|Linux|Android|iOS)/);
   const isMobile = /Mobile|Android|iPhone/.test(userAgent);
 
@@ -68,34 +103,44 @@ function parseUserAgent(userAgent) {
   };
 }
 
-// Debug route
+// ========== Health Check Endpoint ==========
+// Simple endpoint to test if server is running
 app.get("/ping", (req, res) => {
   res.send("pong");
 });
 
-// Global error handler
-process.on('uncaughtException', (err) => {});
-process.on('unhandledRejection', (reason, promise) => {});
+// ========== Global Error Handlers ==========
+// Catch unhandled errors to prevent server crashes
+process.on('uncaughtException', (err) => {
+  // Log uncaught exceptions
+});
+process.on('unhandledRejection', (reason, promise) => {
+  // Log unhandled promise rejections
+});
 
-// -----------------------GET route (Protected)---------------------------
+// ========== JWT Authentication Middleware ==========
+// Protects routes by verifying JWT tokens
+// Extracts token from Authorization header and validates it
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+  const token = authHeader && authHeader.split(' ')[1]; // Extract token from "Bearer TOKEN" format
 
   if (!token) return res.status(401).json({ message: "Access Denied: No Token Provided" });
 
+  // Verify token signature and expiration
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return res.status(403).json({ message: "Invalid or Expired Token" });
-    req.user = user;
-    next();
+    req.user = user;  // Attach user data to request
+    next();           // Continue to route handler
   });
 };
 
-// -----------------------GET route (Protected)---------------------------
+// ========== Get All Users (Protected Route) ==========
+// Returns list of all registered users
+// Requires valid JWT token for access
 app.get("/users", authenticateToken, async (req, res) => {
   try {
-    const users = await User.find();
-    // ^ removes password from response
+    const users = await User.find();  // Note: Password field excluded by User model
 
     return res.json({
       count: users.length,
@@ -108,28 +153,33 @@ app.get("/users", authenticateToken, async (req, res) => {
   }
 });
 
-//-------------------------- ROOT ROUTE ----------------------------
+// ========== Root Route ==========
+// Serves the main landing/home page
+// PATH: index.html is in MAIN folder
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Forentend', 'Templates', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'MAIN', 'index.html'));
 });
 
-//-------------------------- LOGIN ROUTE ----------------------------
+// ========== User Login Route ==========
+// Authenticates user credentials and returns JWT token
+// Also creates a session record for device tracking
 app.post("/login", async (req, res) => {
   try {
     const { email, pass } = req.body;
 
+    // Validate required fields
     if (!email || !pass) {
       return res.status(400).json({ message: "All fields required" });
     }
 
-    // Schema uses 'username', but frontend sends 'email'. 
-    // Assuming username stores the email.
+    // Find user by email (stored in username field)
     const user = await User.findOne({ username: email });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Verify password using bcrypt
     const bcrypt = require("bcryptjs");
     const valid = await bcrypt.compare(pass, user.password);
 
@@ -137,7 +187,7 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Incorrect password" });
     }
 
-    // Create session
+    // Create session record for this login
     const userAgent = req.headers['user-agent'] || '';
     const { browser, os, device } = parseUserAgent(userAgent);
     const ip = req.ip || req.connection.remoteAddress;
@@ -151,8 +201,9 @@ app.post("/login", async (req, res) => {
       ip
     });
 
+    // Generate JWT token and return success response
     return res.json({
-      email: user.username, // Return username as email
+      email: user.username,
       status: "ok",
       token: jwt.sign({ id: user._id, email: user.username }, process.env.JWT_SECRET, { expiresIn: '3d' })
     });
@@ -162,32 +213,34 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// --------------------Signup----------------------
+// ========== User Signup/Registration Route ==========
+// Creates new user account with hashed password
+// Password hashing is handled automatically by User model pre-save hook
 app.post("/signup", async (req, res) => {
   try {
     const { fullName, email, password, dob, musicGenre, favoriteArtist } = req.body;
 
     console.log('[Signup] Request received:', { fullName, email, dob, musicGenre, favoriteArtist });
 
-    // 1) Required fields check
+    // Validate required fields
     if (!fullName || !email || !password || !dob) {
       console.log('[Signup] Missing required fields');
       return res.status(400).json({ message: "All required fields must be filled" });
     }
 
-    // 2) Check if user already exists
+    // Check for existing user
     const already = await User.findOne({ username: email });
     if (already) {
       console.log('[Signup] User already exists:', email);
       return res.status(409).json({ message: "User already exists" });
     }
 
-    // 3) Save new user (Password hashing handled by User model pre-save hook)
+    // Create new user (password will be hashed by User model)
     console.log('[Signup] Creating new user...');
     const newUser = await User.create({
       fullName: fullName,
       username: email,
-      password: password, // Plain text here, model hashes it
+      password: password,  // Plain text here - User model hashes it automatically
       dob: dob,
       musicGenre: musicGenre || null,
       favoriteArtist: favoriteArtist || null
@@ -195,7 +248,7 @@ app.post("/signup", async (req, res) => {
 
     console.log('[Signup] User created successfully:', newUser.username);
 
-    // 4) Success
+    // Return success response
     return res.status(201).json({
       email: newUser.username,
       fullName: newUser.fullName,
@@ -211,11 +264,15 @@ app.post("/signup", async (req, res) => {
     });
   }
 });
-// ---------------------------Get User Sessions----------------------
+// ========== Get User Sessions (Protected Route) ==========
+// Returns all active login sessions for the authenticated user
+// Shows device, browser, OS, and activity information
 app.get("/sessions", authenticateToken, async (req, res) => {
   try {
+    // Find all sessions for this user, sorted by most recent activity
     const sessions = await Session.find({ userId: req.user.id }).sort({ lastActive: -1 });
 
+    // Format session data for response
     const formattedSessions = sessions.map(session => ({
       id: session._id,
       device: session.device,
@@ -235,18 +292,20 @@ app.get("/sessions", authenticateToken, async (req, res) => {
   }
 });
 
-// ---------------------------delete route----------------------
+// ========== Delete User Account ==========
+// Permanently removes user account from database
+// Note: Should ideally be protected with authentication
 app.delete("/user/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
-    // 1) Check if user exists
+    // Verify user exists before deletion
     const user = await User.findById(id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // 2) Delete user
+    // Delete user from database
     await User.findByIdAndDelete(id);
 
     return res.json({
@@ -260,8 +319,16 @@ app.delete("/user/:id", async (req, res) => {
   }
 });
 
-// ======================== JIOSAAVN API ROUTES ========================
+// ============================================================================
+// JIOSAAVN API INTEGRATION
+// ============================================================================
+// These routes act as a proxy to JioSaavn's API for music search and streaming
+// Bypasses CORS restrictions and provides a clean API for the frontend
+// ============================================================================
 
+// ========== JioSaavn Search Endpoint ==========
+// Searches JioSaavn catalog for songs matching the query
+// Returns formatted list of tracks with metadata
 app.get("/api/saavn/search", async (req, res) => {
   try {
     const q = req.query.q;
@@ -271,9 +338,10 @@ app.get("/api/saavn/search", async (req, res) => {
 
     console.log(`[JioSaavn Search] Query: ${q}`);
 
-    // Use search.getResults for better results
+    // Build JioSaavn API URL with search query
     const url = `https://www.jiosaavn.com/api.php?__call=search.getResults&_format=json&_marker=0&api_version=4&ctx=web6dot0&n=50&p=1&q=${encodeURIComponent(q)}`;
 
+    // Make request to JioSaavn API with proper headers
     const response = await axios.get(url, {
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -283,12 +351,13 @@ app.get("/api/saavn/search", async (req, res) => {
       },
       timeout: 15000,
       validateStatus: function (status) {
-        return status >= 200 && status < 500;
+        return status >= 200 && status < 500;  // Accept all non-server-error responses
       }
     });
 
     console.log(`[JioSaavn Search] Response status: ${response.status}`);
 
+    // Parse response (may be JSON string or object)
     let parsed;
     if (typeof response.data === 'string') {
       const jsonStart = response.data.indexOf("{");
@@ -300,12 +369,13 @@ app.get("/api/saavn/search", async (req, res) => {
       parsed = response.data;
     }
 
-    // Get results from search API
+    // Extract song results from response
     const results = parsed.results || parsed.songs?.data || [];
 
-    // Transform to match our format - filter only songs
+    // Transform JioSaavn response format to our standardized format
+    // Filter out non-song results (albums, playlists, etc.)
     const transformedSongs = results
-      .filter(item => item.type === 'song' || !item.type) // Filter only songs
+      .filter(item => item.type === 'song' || !item.type)
       .map(song => ({
         id: song.id,
         name: song.title || song.song || song.name || 'Unknown',
@@ -314,15 +384,15 @@ app.get("/api/saavn/search", async (req, res) => {
                  song.subtitle || 
                  'Unknown Artist',
         album: song.more_info?.album || song.album || '',
-        image: (song.image || '').replace('150x150', '500x500'),
+        image: (song.image || '').replace('150x150', '500x500'),  // Request higher quality image
         duration: song.more_info?.duration || song.duration || '180',
         year: song.year || song.more_info?.release_date?.split('-')[0] || '',
         url: song.perma_url || song.url || '',
         language: song.language || '',
-        preview: song.more_info?.encrypted_media_url || '' // For streaming
+        preview: song.more_info?.encrypted_media_url || ''  // Encrypted URL for streaming
       }));
 
-    // Remove duplicates based on song ID
+    // Remove duplicate songs based on song ID
     const uniqueSongs = [];
     const seenIds = new Set();
     for (const song of transformedSongs) {
@@ -348,6 +418,9 @@ app.get("/api/saavn/search", async (req, res) => {
   }
 });
 
+// ========== JioSaavn Song Details Endpoint ==========
+// Fetches detailed information for a specific song by ID
+// Includes encrypted media URLs for streaming
 app.get("/api/saavn/song", async (req, res) => {
   try {
     const id = req.query.id;
@@ -355,6 +428,7 @@ app.get("/api/saavn/song", async (req, res) => {
       return res.status(400).json({ error: "Song ID is required" });
     }
 
+    // Build JioSaavn song details API URL
     const url = `https://www.jiosaavn.com/api.php?_format=json&__call=song.getDetails&pids=${id}`;
 
     const response = await axios.get(url, {
@@ -454,12 +528,15 @@ app.get("/api/saavn/song", async (req, res) => {
   }
 });
 
-// Proxy endpoint to stream JioSaavn audio (bypass CORS)
+// ========== JioSaavn Audio Streaming Proxy ==========
+// Streams audio files from JioSaavn through our server
+// Bypasses CORS restrictions by acting as a proxy
+// Decrypts the media URL and pipes the audio stream to client
 app.get("/api/saavn/stream/:id", async (req, res) => {
   try {
     const id = req.params.id;
 
-    // First get song details
+    // Fetch song details to get encrypted media URL
     const songUrl = `https://www.jiosaavn.com/api.php?_format=json&__call=song.getDetails&pids=${id}`;
     
     const songResponse = await axios.get(songUrl, {
@@ -535,37 +612,52 @@ app.get("/api/saavn/stream/:id", async (req, res) => {
   }
 });
 
-// ======================== END JIOSAAVN ROUTES ========================
+// ============================================================================
+// END JIOSAAVN API ROUTES
+// ============================================================================
 
-// Serve HTML pages
+// ========== HTML Page Routes ==========
+// Serve static HTML pages for the application
+
+// Music player page
+// PATH: player.html is in MAIN folder
 app.get('/player.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'player.html'));
+  res.sendFile(path.join(__dirname, '..', 'MAIN', 'player.html'));
 });
 
+// User settings page
+// PATH: settings.html is in MAIN folder
 app.get('/settings.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'settings.html'));
+  res.sendFile(path.join(__dirname, '..', 'MAIN', 'settings.html'));
 });
 
+// Login page
+// PATH: LoginPage.html is in Forentend/Templates folder
 app.get('/Forentend/Templates/LoginPage.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Forentend', 'Templates', 'LoginPage.html'));
+  res.sendFile(path.join(__dirname, '..', 'Forentend', 'Templates', 'LoginPage.html'));
 });
 
+// Registration page
+// PATH: RegisterPage.html is in Forentend/Templates folder
 app.get('/Forentend/Templates/RegisterPage.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'Forentend', 'Templates', 'RegisterPage.html'));
+  res.sendFile(path.join(__dirname, '..', 'Forentend', 'Templates', 'RegisterPage.html'));
 });
 
-// Start server
+// ========== Server Startup ==========
+// Start the Express server on specified port
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// Handle server errors
+// ========== Error Handlers ==========
+// Handle server-level errors
 server.on('error', (err) => {
   console.error('Server error:', err);
 });
 
-// Graceful shutdown
+// ========== Graceful Shutdown ==========
+// Handle SIGTERM signal for graceful shutdown (e.g., from hosting platforms)
 process.on('SIGTERM', () => {
   server.close(() => {
     mongoose.connection.close(false, () => {
@@ -574,5 +666,6 @@ process.on('SIGTERM', () => {
   });
 });
 
-// Export for Vercel serverless (if needed)
+// ========== Export for Serverless Deployment ==========
+// Export app for serverless platforms like Vercel
 module.exports = app;
