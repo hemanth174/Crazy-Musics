@@ -110,7 +110,7 @@ app.get("/users", authenticateToken, async (req, res) => {
 
 //-------------------------- ROOT ROUTE ----------------------------
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'Forentend', 'Templates', 'index.html'));
 });
 
 //-------------------------- LOGIN ROUTE ----------------------------
