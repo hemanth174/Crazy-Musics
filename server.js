@@ -167,18 +167,23 @@ app.post("/signup", async (req, res) => {
   try {
     const { fullName, email, password, dob, musicGenre, favoriteArtist } = req.body;
 
+    console.log('[Signup] Request received:', { fullName, email, dob, musicGenre, favoriteArtist });
+
     // 1) Required fields check
     if (!fullName || !email || !password || !dob) {
+      console.log('[Signup] Missing required fields');
       return res.status(400).json({ message: "All required fields must be filled" });
     }
 
     // 2) Check if user already exists
     const already = await User.findOne({ username: email });
     if (already) {
+      console.log('[Signup] User already exists:', email);
       return res.status(409).json({ message: "User already exists" });
     }
 
     // 3) Save new user (Password hashing handled by User model pre-save hook)
+    console.log('[Signup] Creating new user...');
     const newUser = await User.create({
       fullName: fullName,
       username: email,
@@ -188,6 +193,8 @@ app.post("/signup", async (req, res) => {
       favoriteArtist: favoriteArtist || null
     });
 
+    console.log('[Signup] User created successfully:', newUser.username);
+
     // 4) Success
     return res.status(201).json({
       email: newUser.username,
@@ -196,7 +203,12 @@ app.post("/signup", async (req, res) => {
     });
 
   } catch (err) {
-    return res.status(500).json({ message: "Server error" });
+    console.error('[Signup Error]:', err.message);
+    console.error('[Signup Error Stack]:', err.stack);
+    return res.status(500).json({ 
+      message: "Server error",
+      error: err.message 
+    });
   }
 });
 // ---------------------------Get User Sessions----------------------
