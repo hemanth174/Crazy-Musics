@@ -12,7 +12,7 @@
 // Load environment variables from .env file
 // PATH: .env file is in MAIN folder (go up one level from Servers, then into MAIN)
 const path = require('path');
-require("dotenv").config({ path: path.join(__dirname, '..', 'MAIN', '.env') });
+require("dotenv").config({ path: path.join(__dirname, 'MAIN', '.env') });
 
 // Import required dependencies
 const express = require("express");
@@ -42,8 +42,8 @@ app.use(express.json());
 // PATH: MAIN folder contains index.html, player.html, etc.
 // PATH: Forentend folder contains Templates and Static subfolders
 const staticOptions = { fallthrough: true };
-app.use(express.static(path.join(__dirname, '..', 'MAIN'), staticOptions));
-app.use('/Forentend', express.static(path.join(__dirname, '..', 'Forentend'), staticOptions));
+app.use(express.static(path.join(__dirname, 'MAIN'), staticOptions));
+app.use('/Forentend', express.static(path.join(__dirname, 'Forentend'), staticOptions));
 
 // ========== MongoDB Database Connection ==========
 // Connect to MongoDB Atlas using connection string from environment variables
@@ -70,7 +70,7 @@ mongoose.connection.on('error', (err) => {
 // ========== Database Models ==========
 // Import User model for authentication
 // PATH: User model is in MAIN/models folder (go up one level from Servers, then into MAIN/models)
-const User = require("../MAIN/models/User");
+const User = require("./MAIN/models/User");
 
 // ========== Session Schema ==========
 // Tracks user login sessions across different devices
@@ -157,7 +157,7 @@ app.get("/users", authenticateToken, async (req, res) => {
 // Serves the main landing/home page
 // PATH: index.html is in MAIN folder
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'MAIN', 'index.html'));
+  res.sendFile(path.join(__dirname, 'MAIN', 'index.html'));
 });
 
 // ========== User Login Route ==========
@@ -622,25 +622,25 @@ app.get("/api/saavn/stream/:id", async (req, res) => {
 // Music player page
 // PATH: player.html is in MAIN folder
 app.get('/player.html', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'MAIN', 'player.html'));
+  res.sendFile(path.join(__dirname, 'MAIN', 'player.html'));
 });
 
 // User settings page
 // PATH: settings.html is in MAIN folder
 app.get('/settings.html', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'MAIN', 'settings.html'));
+  res.sendFile(path.join(__dirname, 'MAIN', 'settings.html'));
 });
 
 // Login page
 // PATH: LoginPage.html is in Forentend/Templates folder
 app.get('/Forentend/Templates/LoginPage.html', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'Forentend', 'Templates', 'LoginPage.html'));
+  res.sendFile(path.join(__dirname, 'Forentend', 'Templates', 'LoginPage.html'));
 });
 
 // Registration page
 // PATH: RegisterPage.html is in Forentend/Templates folder
 app.get('/Forentend/Templates/RegisterPage.html', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'Forentend', 'Templates', 'RegisterPage.html'));
+  res.sendFile(path.join(__dirname, 'Forentend', 'Templates', 'RegisterPage.html'));
 });
 
 // ========== Server Startup ==========
