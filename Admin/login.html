@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='icon' href='../Forentend/Static/images/APPlogo.png'>
+  <title>Admin Login - Crazy-Musics</title>
+  <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'>
+  <link rel="stylesheet" href="./styles/login.css">
+</head>
+<body>
+  <div class="admin-container">
+    <div class="admin-login-card">
+      <div class="admin-header">
+        <div class="admin-icon">
+          <i class='bx bxs-user-badge'></i>
+        </div>
+        <h1>Admin Portal</h1>
+        <p>Secure access for administrators only</p>
+      </div>
+
+      <form id="adminLoginForm" autocomplete="off">
+        <div class="form-group">
+          <label for="adminEmail">
+            <i class='bx bx-envelope'></i>
+            Admin Email
+          </label>
+          <input 
+            type="text" 
+            id="adminEmail" 
+            name="admin-email-field"
+            autocomplete="off" 
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            data-form-type="other"
+            placeholder="Enter admin email"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="adminPassword">
+            <i class='bx bx-lock-alt'></i>
+            Admin Password
+          </label>
+          <div class="password-wrapper">
+            <input 
+              type="password" 
+              id="adminPassword" 
+              name="admin-password-field"
+              autocomplete="new-password" 
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              data-form-type="other"
+              data-lpignore="true"
+              placeholder="Enter admin password"
+              required>
+            <i class='bx bx-show' id="togglePassword" role="button" aria-label="Toggle password visibility" tabindex="0"></i>
+          </div>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+
+        <button type="submit" class="admin-btn" id="loginBtn">
+          <span id="btnText">Sign In</span>
+          <i class='bx bx-right-arrow-alt' id="btnIcon"></i>
+        </button>
+      </form>
+
+      <div class="admin-footer">
+        <i class='bx bxs-lock-alt'></i>
+        <span>Credentials are encrypted and never stored</span>
+      </div>
+    </div>
+
+    <!-- Decorative elements -->
+    <div class="decoration decoration-1"></div>
+    <div class="decoration decoration-2"></div>
+    <div class="decoration decoration-3"></div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    // Check if admin is already logged in
+    const adminToken = sessionStorage.getItem('adminToken');
+    if (adminToken) {
+      window.location.href = './dashboard.html';
+    }
+
+    // Prevent all forms of autocomplete and password saving
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('adminLoginForm');
+      form.setAttribute('autocomplete', 'off');
+      
+      // Additional layer to prevent password managers
+      const inputs = form.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.setAttribute('data-lpignore', 'true');
+        input.setAttribute('data-form-type', 'other');
+      });
+    });
+
+    // Password toggle
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordField = document.getElementById('adminPassword');
+    
+    if (togglePassword && passwordField) {
+      const toggle = () => {
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        togglePassword.classList.toggle('bx-show');
+        togglePassword.classList.toggle('bx-hide');
+      };
+
+      togglePassword.addEventListener('click', toggle);
+      togglePassword.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    }
+
+    // Toast notification
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast show ${type}`;
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Error message display
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      
+      setTimeout(() => {
+        errorDiv.style.display = 'none';
+      }, 4000);
+    }
+
+    // Admin login handler
+    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const emailField = document.getElementById('adminEmail');
+      const passwordField = document.getElementById('adminPassword');
+      const loginBtn = document.getElementById('loginBtn');
+      const btnText = document.getElementById('btnText');
+      const btnIcon = document.getElementById('btnIcon');
+
+      const email = emailField.value.trim();
+      const password = passwordField.value;
+
+      // Client-side validation
+      if (!email || !password) {
+        showError('⚠️ All fields are required');
+        showToast('Please fill in all fields', 'error');
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showError('⚠️ Please enter a valid email address');
+        showToast('Invalid email format', 'error');
+        return;
+      }
+
+      // Disable button and start checking animation
+      loginBtn.disabled = true;
+      btnText.textContent = 'Checking credentials...';
+      btnIcon.style.display = 'none';
+      
+      // Show checking animation for 10-15 seconds
+      const checkingMessages = [
+        'Verifying credentials...',
+        'Authenticating admin...',
+        'Checking permissions...',
+        'Almost there...'
+      ];
+      
+      let messageIndex = 0;
+      const messageInterval = setInterval(() => {
+        messageIndex = (messageIndex + 1) % checkingMessages.length;
+        btnText.textContent = checkingMessages[messageIndex];
+      }, 3000);
+      
+      // Wait 10-15 seconds (random between 10000-15000ms)
+      const delay = Math.floor(Math.random() * 5000) + 10000;
+      
+      setTimeout(async () => {
+        clearInterval(messageInterval);
+        btnText.textContent = 'Finalizing...';
+        
+        try {
+          // Send credentials to server for authentication
+          // Auto-detect environment
+          const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:3000'
+            : 'https://crazy-musics-1.onrender.com';
+          const response = await fetch(`${API_BASE_URL}/admin/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              email: email,
+              password: password
+            })
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.token) {
+            // Valid admin credentials - store JWT token from server
+            sessionStorage.setItem('adminToken', data.token);
+            sessionStorage.setItem('adminEmail', data.email);
+            sessionStorage.setItem('adminName', data.name || 'Admin');
+
+            showToast('✅ Access Granted! Redirecting...', 'success');
+            btnText.textContent = 'Access Granted';
+            
+            // Clear form (prevent any saving)
+            emailField.value = '';
+            passwordField.value = '';
+
+            // Redirect to dashboard
+            setTimeout(() => {
+              window.location.href = './dashboard.html';
+            }, 1000);
+            
+          } else {
+            // Invalid credentials
+            loginBtn.disabled = false;
+            btnText.textContent = 'Sign In';
+            btnIcon.style.display = 'inline-block';
+            
+            showError('❌ Access Denied: Invalid admin credentials');
+            showToast('Invalid email or password', 'error');
+            
+            // Clear password for security
+            passwordField.value = '';
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          loginBtn.disabled = false;
+          btnText.textContent = 'Sign In';
+          btnIcon.style.display = 'inline-block';
+          
+          showError('⚠️ Connection error. Please try again.');
+          showToast('Connection failed', 'error');
+          passwordField.value = '';
+        }
+      }, delay)
+    });
+
+    // Clear inputs on page unload (prevent any caching)
+    window.addEventListener('beforeunload', () => {
+      document.getElementById('adminEmail').value = '';
+      document.getElementById('adminPassword').value = '';
+    });
+  </script>
+</body>
+</html>

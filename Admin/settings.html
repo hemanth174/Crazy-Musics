@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='icon' href='../Forentend/Static/images/APPlogo.png'>
+  <title>Settings - Admin Dashboard</title>
+  <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'>
+  <link rel="stylesheet" href="./styles/dashboard.css">
+  <link rel="stylesheet" href="./styles/settings.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class='bx bxs-music'></i>
+        <span>Crazy-Musics</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="./dashboard.html" class="nav-item">
+        <i class='bx bxs-dashboard'></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="./analytics.html" class="nav-item">
+        <i class='bx bxs-bar-chart-alt-2'></i>
+        <span>Analytics</span>
+      </a>
+      <a href="./reports.html" class="nav-item">
+        <i class='bx bxs-file-doc'></i>
+        <span>Reports</span>
+      </a>
+      <a href="#" class="nav-item active">
+        <i class='bx bxs-cog'></i>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" id="logoutBtn">
+        <i class='bx bx-log-out'></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle">
+          <i class='bx bx-menu'></i>
+        </button>
+        <h1>Settings</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-primary" id="saveAllBtn">
+          <i class='bx bx-save'></i>
+          Save All Changes
+        </button>
+      </div>
+    </header>
+
+    <!-- Settings Content -->
+    <div class="dashboard-container">
+      <div class="settings-layout">
+        <!-- Settings Sidebar -->
+        <aside class="settings-sidebar">
+          <nav class="settings-nav">
+            <a href="#general" class="settings-nav-item active">
+              <i class='bx bxs-cog'></i>
+              <span>General</span>
+            </a>
+            <a href="#security" class="settings-nav-item">
+              <i class='bx bxs-shield'></i>
+              <span>Security</span>
+            </a>
+            <a href="#notifications" class="settings-nav-item">
+              <i class='bx bxs-bell'></i>
+              <span>Notifications</span>
+            </a>
+            <a href="#appearance" class="settings-nav-item">
+              <i class='bx bxs-palette'></i>
+              <span>Appearance</span>
+            </a>
+            <a href="#system" class="settings-nav-item">
+              <i class='bx bxs-server'></i>
+              <span>System</span>
+            </a>
+            <a href="#backup" class="settings-nav-item">
+              <i class='bx bxs-data'></i>
+              <span>Backup</span>
+            </a>
+          </nav>
+        </aside>
+
+        <!-- Settings Content -->
+        <div class="settings-content">
+          <!-- General Settings -->
+          <section class="settings-section" id="general">
+            <h2>General Settings</h2>
+            <p class="section-description">Configure general application settings</p>
+
+            <div class="settings-card">
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Application Name</h3>
+                  <p>The display name of your application</p>
+                </div>
+                <input type="text" class="setting-input" value="Crazy-Musics" placeholder="App Name">
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Admin Email</h3>
+                  <p>Primary contact email for admin notifications</p>
+                </div>
+                <input type="email" class="setting-input" value="Admin777@gmail.com" placeholder="admin@example.com">
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Time Zone</h3>
+                  <p>Set the default timezone for the application</p>
+                </div>
+                <select class="setting-select">
+                  <option>(UTC-05:00) Eastern Time</option>
+                  <option>(UTC-06:00) Central Time</option>
+                  <option>(UTC-07:00) Mountain Time</option>
+                  <option>(UTC-08:00) Pacific Time</option>
+                  <option>(UTC+00:00) UTC</option>
+                  <option>(UTC+05:30) India Standard Time</option>
+                </select>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Language</h3>
+                  <p>Application interface language</p>
+                </div>
+                <select class="setting-select">
+                  <option>English</option>
+                  <option>Spanish</option>
+                  <option>French</option>
+                  <option>German</option>
+                  <option>Hindi</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <!-- Security Settings -->
+          <section class="settings-section" id="security">
+            <h2>Security Settings</h2>
+            <p class="section-description">Manage security and authentication settings</p>
+
+            <div class="settings-card">
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Two-Factor Authentication</h3>
+                  <p>Add an extra layer of security to your account</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Session Timeout</h3>
+                  <p>Auto-logout after period of inactivity</p>
+                </div>
+                <select class="setting-select">
+                  <option>15 minutes</option>
+                  <option>30 minutes</option>
+                  <option>1 hour</option>
+                  <option>4 hours</option>
+                  <option>8 hours</option>
+                  <option>Never</option>
+                </select>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>IP Whitelist</h3>
+                  <p>Restrict admin access to specific IP addresses</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Login Notifications</h3>
+                  <p>Get notified of all admin login attempts</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="settings-card">
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Change Password</h3>
+                  <p>Update your admin password</p>
+                </div>
+                <button class="setting-btn">
+                  <i class='bx bx-lock-alt'></i>
+                  Change Password
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Notifications Settings -->
+          <section class="settings-section" id="notifications">
+            <h2>Notification Settings</h2>
+            <p class="section-description">Manage your notification preferences</p>
+
+            <div class="settings-card">
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Email Notifications</h3>
+                  <p>Receive notifications via email</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>New User Registrations</h3>
+                  <p>Notify when new users sign up</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>System Alerts</h3>
+                  <p>Critical system notifications and errors</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Weekly Reports</h3>
+                  <p>Receive weekly analytics summary</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <!-- Appearance Settings -->
+          <section class="settings-section" id="appearance">
+            <h2>Appearance Settings</h2>
+            <p class="section-description">Customize the look and feel of your dashboard</p>
+
+            <div class="settings-card">
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Theme</h3>
+                  <p>Choose between light and dark mode</p>
+                </div>
+                <select class="setting-select">
+                  <option>Light Mode</option>
+                  <option>Dark Mode</option>
+                  <option>Auto (System)</option>
+                </select>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Accent Color</h3>
+                  <p>Primary color theme for the dashboard</p>
+                </div>
+                <div class="color-picker">
+                  <input type="color" value="#667eea" class="color-input">
+                  <span class="color-value">#667eea</span>
+                </div>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Compact Mode</h3>
+                  <p>Reduce spacing for more content on screen</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <!-- System Settings -->
+          <section class="settings-section" id="system">
+            <h2>System Settings</h2>
+            <p class="section-description">Configure system-level settings</p>
+
+            <div class="settings-card">
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>API Rate Limiting</h3>
+                  <p>Maximum API requests per minute</p>
+                </div>
+                <input type="number" class="setting-input" value="100" placeholder="Requests per minute">
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Cache Duration</h3>
+                  <p>How long to cache data (in minutes)</p>
+                </div>
+                <input type="number" class="setting-input" value="30" placeholder="Minutes">
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Maintenance Mode</h3>
+                  <p>Put the application in maintenance mode</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Debug Mode</h3>
+                  <p>Enable detailed error logging</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <!-- Backup Settings -->
+          <section class="settings-section" id="backup">
+            <h2>Backup & Restore</h2>
+            <p class="section-description">Manage data backups and restoration</p>
+
+            <div class="settings-card">
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Automatic Backups</h3>
+                  <p>Enable automated database backups</p>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Backup Frequency</h3>
+                  <p>How often to create backups</p>
+                </div>
+                <select class="setting-select">
+                  <option>Daily</option>
+                  <option>Weekly</option>
+                  <option>Monthly</option>
+                </select>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Last Backup</h3>
+                  <p>December 7, 2025 at 3:30 AM</p>
+                </div>
+                <button class="setting-btn">
+                  <i class='bx bx-cloud-download'></i>
+                  Download Backup
+                </button>
+              </div>
+
+              <div class="setting-item">
+                <div class="setting-info">
+                  <h3>Create Manual Backup</h3>
+                  <p>Generate a backup now</p>
+                </div>
+                <button class="setting-btn primary">
+                  <i class='bx bx-save'></i>
+                  Create Backup
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast"></div>
+
+  <script src="./scripts/common.js"></script>
+  <script>
+    // Settings navigation
+    document.querySelectorAll('.settings-nav-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelector('.settings-nav-item.active').classList.remove('active');
+        item.classList.add('active');
+        
+        const target = item.getAttribute('href').substring(1);
+        document.getElementById(target).scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Save all changes
+    document.getElementById('saveAllBtn').addEventListener('click', () => {
+      showToast('All settings saved successfully!', 'success');
+    });
+
+    // Toggle switches
+    document.querySelectorAll('.toggle-switch input').forEach(toggle => {
+      toggle.addEventListener('change', (e) => {
+        const setting = e.target.closest('.setting-item').querySelector('h3').textContent;
+        const status = e.target.checked ? 'enabled' : 'disabled';
+        showToast(`${setting} ${status}`, 'info');
+      });
+    });
+
+    // Color picker
+    document.querySelector('.color-input')?.addEventListener('input', (e) => {
+      document.querySelector('.color-value').textContent = e.target.value;
+    });
+  </script>
+</body>
+</html>

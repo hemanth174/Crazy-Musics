@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='icon' href='../Forentend/Static/images/APPlogo.png'>
+  <title>Admin Dashboard - Crazy-Musics</title>
+  <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'>
+  <link rel="stylesheet" href="./styles/dashboard.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class='bx bxs-music'></i>
+        <span>Crazy-Musics</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active">
+        <i class='bx bxs-dashboard'></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="./reports.html" class="nav-item">
+        <i class='bx bxs-user-detail'></i>
+        <span>Users</span>
+      </a>
+      <a href="./analytics.html" class="nav-item">
+        <i class='bx bxs-bar-chart-alt-2'></i>
+        <span>Analytics</span>
+      </a>
+      <a href="./settings.html" class="nav-item">
+        <i class='bx bxs-cog'></i>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" id="logoutBtn">
+        <i class='bx bx-log-out'></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle">
+          <i class='bx bx-menu'></i>
+        </button>
+        <h1>User Management</h1>
+      </div>
+      <div class="topbar-right">
+        <div class="admin-profile">
+          <div class="admin-avatar">
+            <i class='bx bxs-user-circle'></i>
+          </div>
+          <div class="admin-info">
+            <span class="admin-name" id="adminName">Admin</span>
+            <span class="admin-role">Administrator</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue">
+            <i class='bx bxs-group'></i>
+          </div>
+          <div class="stat-info">
+            <h3 id="totalUsers">0</h3>
+            <p>Total Users</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon green">
+            <i class='bx bxs-user-plus'></i>
+          </div>
+          <div class="stat-info">
+            <h3 id="newUsers">0</h3>
+            <p>New This Month</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon purple">
+            <i class='bx bxs-user-check'></i>
+          </div>
+          <div class="stat-info">
+            <h3 id="activeUsers">0</h3>
+            <p>Active Users</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon orange">
+            <i class='bx bxs-music'></i>
+          </div>
+          <div class="stat-info">
+            <h3>∞</h3>
+            <p>Songs Available</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Table Section -->
+      <div class="table-section">
+        <div class="table-header">
+          <h2>All Users</h2>
+          <div class="table-actions">
+            <div class="search-box">
+              <i class='bx bx-search'></i>
+              <input type="text" id="searchInput" placeholder="Search users...">
+            </div>
+            <select id="filterGenre" class="filter-select">
+              <option value="">All Genres</option>
+              <option value="Pop">Pop</option>
+              <option value="Rock">Rock</option>
+              <option value="Hip-Hop">Hip-Hop</option>
+              <option value="Jazz">Jazz</option>
+              <option value="Classical">Classical</option>
+              <option value="Electronic">Electronic</option>
+              <option value="R&B">R&B</option>
+              <option value="Other">Other</option>
+            </select>
+            <button class="btn-primary" id="addUserBtn">
+              <i class='bx bx-plus'></i>
+              Add User
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Date of Birth</th>
+                <th>Music Genre</th>
+                <th>Favorite Artist</th>
+                <th>Joined Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody">
+              <!-- Users will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <div class="showing-info" id="showingInfo">Showing 0 of 0 users</div>
+          <div class="pagination" id="pagination">
+            <!-- Pagination will be added dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Create/Edit User Modal -->
+  <div class="modal" id="userModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add New User</h2>
+        <button class="modal-close" id="closeModal">
+          <i class='bx bx-x'></i>
+        </button>
+      </div>
+
+      <form id="userForm" autocomplete="off">
+        <input type="hidden" id="userId">
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fullName">
+              <i class='bx bx-user'></i>
+              Full Name *
+            </label>
+            <input type="text" id="fullName" placeholder="John Doe" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">
+              <i class='bx bx-envelope'></i>
+              Email *
+            </label>
+            <input type="email" id="email" placeholder="john@example.com" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">
+              <i class='bx bx-lock-alt'></i>
+              Password *
+            </label>
+            <input type="password" id="password" placeholder="Min. 6 characters">
+          </div>
+
+          <div class="form-group">
+            <label for="dob">
+              <i class='bx bx-calendar'></i>
+              Date of Birth *
+            </label>
+            <input type="date" id="dob" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="musicGenre">
+              <i class='bx bx-music'></i>
+              Music Genre
+            </label>
+            <select id="musicGenre">
+              <option value="">Select Genre</option>
+              <option value="Pop">Pop</option>
+              <option value="Rock">Rock</option>
+              <option value="Hip-Hop">Hip-Hop</option>
+              <option value="Jazz">Jazz</option>
+              <option value="Classical">Classical</option>
+              <option value="Electronic">Electronic</option>
+              <option value="R&B">R&B</option>
+              <option value="Country">Country</option>
+              <option value="Reggae">Reggae</option>
+              <option value="Blues">Blues</option>
+              <option value="Metal">Metal</option>
+              <option value="Indie">Indie</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="favoriteArtist">
+              <i class='bx bxs-star'></i>
+              Favorite Artist
+            </label>
+            <input type="text" id="favoriteArtist" placeholder="Artist name">
+          </div>
+        </div>
+
+        <div id="modalError" class="error-message"></div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn-primary" id="saveBtn">
+            <i class='bx bx-save'></i>
+            Save User
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" id="deleteModal">
+    <div class="modal-content delete-modal">
+      <div class="delete-icon">
+        <i class='bx bx-trash'></i>
+      </div>
+      <h2>Delete User?</h2>
+      <p>Are you sure you want to delete <strong id="deleteUserName"></strong>? This action cannot be undone.</p>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancelDeleteBtn">Cancel</button>
+        <button type="button" class="btn-danger" id="confirmDeleteBtn">
+          <i class='bx bx-trash'></i>
+          Delete User
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="./scripts/dashboard.js"></script>
+</body>
+</html>

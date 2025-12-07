@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='icon' href='../Forentend/Static/images/APPlogo.png'>
+  <title>Analytics - Admin Dashboard</title>
+  <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'>
+  <link rel="stylesheet" href="./styles/dashboard.css">
+  <link rel="stylesheet" href="./styles/analytics.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class='bx bxs-music'></i>
+        <span>Crazy-Musics</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="./dashboard.html" class="nav-item">
+        <i class='bx bxs-dashboard'></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-item active">
+        <i class='bx bxs-bar-chart-alt-2'></i>
+        <span>Analytics</span>
+      </a>
+      <a href="./reports.html" class="nav-item">
+        <i class='bx bxs-file-doc'></i>
+        <span>Reports</span>
+      </a>
+      <a href="./settings.html" class="nav-item">
+        <i class='bx bxs-cog'></i>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" id="logoutBtn">
+        <i class='bx bx-log-out'></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle">
+          <i class='bx bx-menu'></i>
+        </button>
+        <h1>Analytics</h1>
+      </div>
+      <div class="topbar-right">
+        <div class="admin-profile">
+          <div class="admin-avatar">
+            <i class='bx bxs-user-circle'></i>
+          </div>
+          <div class="admin-info">
+            <span class="admin-name" id="adminName">Admin</span>
+            <span class="admin-role">Administrator</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Analytics Content -->
+    <div class="dashboard-container">
+      <!-- Time Range Selector -->
+      <div class="time-selector">
+        <button class="time-btn active" data-range="week">Last 7 Days</button>
+        <button class="time-btn" data-range="month">Last Month</button>
+        <button class="time-btn" data-range="year">Last Year</button>
+        <button class="time-btn" data-range="all">All Time</button>
+      </div>
+
+      <!-- Stats Overview -->
+      <div class="stats-grid">
+        <div class="stat-card gradient-blue">
+          <div class="stat-header">
+            <h3>Total Streams</h3>
+            <i class='bx bxs-music'></i>
+          </div>
+          <div class="stat-value">1,234,567</div>
+          <div class="stat-change positive">
+            <i class='bx bx-trending-up'></i>
+            <span>+12.5% from last week</span>
+          </div>
+        </div>
+
+        <div class="stat-card gradient-green">
+          <div class="stat-header">
+            <h3>Active Users</h3>
+            <i class='bx bxs-user-check'></i>
+          </div>
+          <div class="stat-value">45,678</div>
+          <div class="stat-change positive">
+            <i class='bx bx-trending-up'></i>
+            <span>+8.3% from last week</span>
+          </div>
+        </div>
+
+        <div class="stat-card gradient-purple">
+          <div class="stat-header">
+            <h3>New Signups</h3>
+            <i class='bx bxs-user-plus'></i>
+          </div>
+          <div class="stat-value">3,456</div>
+          <div class="stat-change positive">
+            <i class='bx bx-trending-up'></i>
+            <span>+15.2% from last week</span>
+          </div>
+        </div>
+
+        <div class="stat-card gradient-orange">
+          <div class="stat-header">
+            <h3>Avg. Session</h3>
+            <i class='bx bxs-time'></i>
+          </div>
+          <div class="stat-value">24m</div>
+          <div class="stat-change negative">
+            <i class='bx bx-trending-down'></i>
+            <span>-2.1% from last week</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h2>User Growth</h2>
+            <select class="chart-filter">
+              <option>Last 7 Days</option>
+              <option>Last Month</option>
+              <option>Last Year</option>
+            </select>
+          </div>
+          <div class="chart-container">
+            <canvas id="userGrowthChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <h2>Music Genre Distribution</h2>
+          </div>
+          <div class="chart-container">
+            <canvas id="genreChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Content Section -->
+      <div class="top-content-grid">
+        <div class="content-card">
+          <h2>Top Music Genres</h2>
+          <div class="top-list">
+            <div class="top-item">
+              <div class="rank">1</div>
+              <div class="item-info">
+                <span class="item-name">Pop</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 85%"></div>
+                </div>
+              </div>
+              <span class="item-value">85%</span>
+            </div>
+            <div class="top-item">
+              <div class="rank">2</div>
+              <div class="item-info">
+                <span class="item-name">Hip-Hop</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 72%"></div>
+                </div>
+              </div>
+              <span class="item-value">72%</span>
+            </div>
+            <div class="top-item">
+              <div class="rank">3</div>
+              <div class="item-info">
+                <span class="item-name">Rock</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 68%"></div>
+                </div>
+              </div>
+              <span class="item-value">68%</span>
+            </div>
+            <div class="top-item">
+              <div class="rank">4</div>
+              <div class="item-info">
+                <span class="item-name">Electronic</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 54%"></div>
+                </div>
+              </div>
+              <span class="item-value">54%</span>
+            </div>
+            <div class="top-item">
+              <div class="rank">5</div>
+              <div class="item-info">
+                <span class="item-name">Jazz</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 41%"></div>
+                </div>
+              </div>
+              <span class="item-value">41%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <h2>Popular Artists</h2>
+          <div class="top-list">
+            <div class="top-item">
+              <div class="rank">1</div>
+              <div class="item-info">
+                <span class="item-name">Taylor Swift</span>
+                <div class="progress-bar">
+                  <div class="progress-fill blue" style="width: 92%"></div>
+                </div>
+              </div>
+              <span class="item-value">12.3K</span>
+            </div>
+            <div class="top-item">
+              <div class="rank">2</div>
+              <div class="item-info">
+                <span class="item-name">Drake</span>
+                <div class="progress-bar">
+                  <div class="progress-fill blue" style="width: 88%"></div>
+                </div>
+              </div>
+              <span class="item-value">11.8K</span>
+            </div>
+            <div class="top-item">
+              <div class="rank">3</div>
+              <div class="item-info">
+                <span class="item-name">The Weeknd</span>
+                <div class="progress-bar">
+                  <div class="progress-fill blue" style="width: 79%"></div>
+                </div>
+              </div>
+              <span class="item-value">10.5K</span>
+            </div>
+            <div class="top-item">
+              <div class="rank">4</div>
+              <div class="item-info">
+                <span class="item-name">Ariana Grande</span>
+                <div class="progress-bar">
+                  <div class="progress-fill blue" style="width: 71%"></div>
+                </div>
+              </div>
+              <span class="item-value">9.4K</span>
+            </div>
+            <div class="top-item">
+              <div class="rank">5</div>
+              <div class="item-info">
+                <span class="item-name">Ed Sheeran</span>
+                <div class="progress-bar">
+                  <div class="progress-fill blue" style="width: 65%"></div>
+                </div>
+              </div>
+              <span class="item-value">8.6K</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast"></div>
+
+  <script src="./scripts/common.js"></script>
+  <script>
+    // Simple chart simulation (you can integrate Chart.js for real charts)
+    document.addEventListener('DOMContentLoaded', () => {
+      // Time range selector
+      document.querySelectorAll('.time-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelector('.time-btn.active').classList.remove('active');
+          btn.classList.add('active');
+          showToast(`Showing analytics for ${btn.textContent}`, 'info');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -41,9 +41,13 @@ app.use(express.json());
 // Serve frontend files from MAIN folder and Forentend folder
 // PATH: MAIN folder contains index.html, player.html, etc.
 // PATH: Forentend folder contains Templates and Static subfolders
+// PATH: Admin folder contains admin panel files
 const staticOptions = { fallthrough: true };
 app.use(express.static(path.join(__dirname, 'MAIN'), staticOptions));
+// Also mount the MAIN folder under the /MAIN path to support frontend links
+app.use('/MAIN', express.static(path.join(__dirname, 'MAIN'), staticOptions));
 app.use('/Forentend', express.static(path.join(__dirname, 'Forentend'), staticOptions));
+app.use('/Admin', express.static(path.join(__dirname, 'Admin'), staticOptions));
 
 // ========== MongoDB Database Connection ==========
 // Connect to MongoDB Atlas using connection string from environment variables
@@ -135,10 +139,35 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+// ========== Combined Authentication Middleware ==========
+// Accepts both user and admin tokens
+const authenticateAny = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "Access Denied: No Token Provided" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid or Expired Token" });
+    }
+
+    // Set user or admin based on role
+    if (decoded.role === 'admin') {
+      req.admin = decoded;
+    } else {
+      req.user = decoded;
+    }
+    next();
+  });
+};
+
 // ========== Get All Users (Protected Route) ==========
 // Returns list of all registered users
-// Requires valid JWT token for access
-app.get("/users", authenticateToken, async (req, res) => {
+// Requires valid JWT token (user or admin) for access
+app.get("/users", authenticateAny, async (req, res) => {
   try {
     const users = await User.find();  // Note: Password field excluded by User model
 
@@ -315,6 +344,123 @@ app.delete("/user/:id", async (req, res) => {
 
   } catch (err) {
     console.error(err);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+// ============================================================================
+// ADMIN AUTHENTICATION & USER MANAGEMENT
+// ============================================================================
+// Admin panel routes for managing users and system administration
+// Admin credentials are validated against environment variables
+// ============================================================================
+
+// ========== Admin Login Route ==========
+// Authenticates admin credentials and returns JWT token
+// Admin email and password are stored in environment variables
+app.post("/admin/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validate required fields
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password required" });
+    }
+
+    // Check against environment variables
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'Admin777@gmail.com';
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Admin117';
+    const ADMIN_NAME = process.env.ADMIN_NAME || 'Admin';
+
+    if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+      return res.status(401).json({ message: "Invalid admin credentials" });
+    }
+
+    // Generate JWT token for admin
+    const adminToken = jwt.sign(
+      { email: ADMIN_EMAIL, role: 'admin', name: ADMIN_NAME },
+      process.env.JWT_SECRET,
+      { expiresIn: '8h' }
+    );
+
+    return res.json({
+      email: ADMIN_EMAIL,
+      name: ADMIN_NAME,
+      status: "ok",
+      token: adminToken
+    });
+
+  } catch (err) {
+    console.error('[Admin Login Error]:', err);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+// ========== Admin Middleware ==========
+// Verifies admin JWT token for protected admin routes
+const authenticateAdmin = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: "Access Denied: No Token Provided" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid or Expired Token" });
+    }
+
+    // Check if token has admin role
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({ message: "Access Denied: Admin Only" });
+    }
+
+    req.admin = decoded;
+    next();
+  });
+};
+
+// ========== Update User (Admin Only) ==========
+// Allows admin to update user information
+app.put("/admin/users/:id", authenticateAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fullName, dob, musicGenre, favoriteArtist, password } = req.body;
+
+    // Find user
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update fields
+    if (fullName) user.fullName = fullName;
+    if (dob) user.dob = dob;
+    if (musicGenre !== undefined) user.musicGenre = musicGenre;
+    if (favoriteArtist !== undefined) user.favoriteArtist = favoriteArtist;
+    
+    // Update password if provided (will be hashed by pre-save hook)
+    if (password) {
+      user.password = password;
+    }
+
+    await user.save();
+
+    return res.json({
+      message: "User updated successfully",
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        username: user.username,
+        dob: user.dob,
+        musicGenre: user.musicGenre,
+        favoriteArtist: user.favoriteArtist
+      }
+    });
+
+  } catch (err) {
+    console.error('[Admin Update User Error]:', err);
     return res.status(500).json({ message: "Server error" });
   }
 });
@@ -642,7 +788,10 @@ app.get('/Forentend/Templates/LoginPage.html', (req, res) => {
 app.get('/Forentend/Templates/RegisterPage.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'Forentend', 'Templates', 'RegisterPage.html'));
 });
-
+app.get('/Forentend/Templates/index.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'Forentend', 'Templates', 'index.html'));
+});
+ 
 // ========== Server Startup ==========
 // Start the Express server on specified port
 const PORT = process.env.PORT || 3000;
