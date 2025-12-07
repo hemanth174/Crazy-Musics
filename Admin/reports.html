@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel='icon' href='../Forentend/Static/images/APPlogo.png'>
+  <title>Reports - Admin Dashboard</title>
+  <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'>
+  <link rel="stylesheet" href="./styles/dashboard.css">
+  <link rel="stylesheet" href="./styles/reports.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <i class='bx bxs-music'></i>
+        <span>Crazy-Musics</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="./dashboard.html" class="nav-item">
+        <i class='bx bxs-dashboard'></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="./analytics.html" class="nav-item">
+        <i class='bx bxs-bar-chart-alt-2'></i>
+        <span>Analytics</span>
+      </a>
+      <a href="#" class="nav-item active">
+        <i class='bx bxs-file-doc'></i>
+        <span>Reports</span>
+      </a>
+      <a href="./settings.html" class="nav-item">
+        <i class='bx bxs-cog'></i>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" id="logoutBtn">
+        <i class='bx bx-log-out'></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggle">
+          <i class='bx bx-menu'></i>
+        </button>
+        <h1>Reports</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-primary" id="generateReportBtn">
+          <i class='bx bx-plus'></i>
+          Generate Report
+        </button>
+      </div>
+    </header>
+
+    <!-- Reports Content -->
+    <div class="dashboard-container">
+      <!-- Quick Reports -->
+      <div class="quick-reports">
+        <h2>Quick Reports</h2>
+        <div class="report-cards">
+          <div class="report-card">
+            <div class="report-icon blue">
+              <i class='bx bxs-user'></i>
+            </div>
+            <div class="report-info">
+              <h3>User Activity Report</h3>
+              <p>Complete overview of user engagement and activity patterns</p>
+            </div>
+            <button class="report-btn">
+              <i class='bx bx-download'></i>
+              Download
+            </button>
+          </div>
+
+          <div class="report-card">
+            <div class="report-icon green">
+              <i class='bx bxs-music'></i>
+            </div>
+            <div class="report-info">
+              <h3>Music Streaming Report</h3>
+              <p>Detailed analysis of streaming trends and popular content</p>
+            </div>
+            <button class="report-btn">
+              <i class='bx bx-download'></i>
+              Download
+            </button>
+          </div>
+
+          <div class="report-card">
+            <div class="report-icon purple">
+              <i class='bx bxs-pie-chart-alt-2'></i>
+            </div>
+            <div class="report-info">
+              <h3>Genre Analytics Report</h3>
+              <p>Breakdown of music genre preferences and trends</p>
+            </div>
+            <button class="report-btn">
+              <i class='bx bx-download'></i>
+              Download
+            </button>
+          </div>
+
+          <div class="report-card">
+            <div class="report-icon orange">
+              <i class='bx bxs-time'></i>
+            </div>
+            <div class="report-info">
+              <h3>Session Duration Report</h3>
+              <p>Analysis of user session lengths and peak hours</p>
+            </div>
+            <button class="report-btn">
+              <i class='bx bx-download'></i>
+              Download
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generated Reports History -->
+      <div class="reports-section">
+        <div class="section-header">
+          <h2>Report History</h2>
+          <div class="filter-group">
+            <select class="filter-select">
+              <option>All Types</option>
+              <option>User Reports</option>
+              <option>Music Reports</option>
+              <option>Analytics Reports</option>
+            </select>
+            <select class="filter-select">
+              <option>Last 7 Days</option>
+              <option>Last Month</option>
+              <option>Last Year</option>
+              <option>All Time</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="reports-table-container">
+          <table class="reports-table">
+            <thead>
+              <tr>
+                <th>Report Name</th>
+                <th>Type</th>
+                <th>Generated By</th>
+                <th>Date</th>
+                <th>Size</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="report-name">
+                    <i class='bx bxs-file-pdf'></i>
+                    <span>Monthly User Activity - Nov 2025</span>
+                  </div>
+                </td>
+                <td><span class="badge badge-blue">User Activity</span></td>
+                <td>Admin</td>
+                <td>Dec 1, 2025</td>
+                <td>2.4 MB</td>
+                <td><span class="status-badge success">Completed</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="btn-icon btn-download" title="Download">
+                      <i class='bx bx-download'></i>
+                    </button>
+                    <button class="btn-icon btn-view" title="View">
+                      <i class='bx bx-show'></i>
+                    </button>
+                    <button class="btn-icon btn-delete" title="Delete">
+                      <i class='bx bx-trash'></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="report-name">
+                    <i class='bx bxs-file-pdf'></i>
+                    <span>Music Streaming Analytics Q4</span>
+                  </div>
+                </td>
+                <td><span class="badge badge-green">Music Analytics</span></td>
+                <td>Admin</td>
+                <td>Nov 28, 2025</td>
+                <td>5.7 MB</td>
+                <td><span class="status-badge success">Completed</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="btn-icon btn-download" title="Download">
+                      <i class='bx bx-download'></i>
+                    </button>
+                    <button class="btn-icon btn-view" title="View">
+                      <i class='bx bx-show'></i>
+                    </button>
+                    <button class="btn-icon btn-delete" title="Delete">
+                      <i class='bx bx-trash'></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="report-name">
+                    <i class='bx bxs-file-pdf'></i>
+                    <span>Genre Distribution Report</span>
+                  </div>
+                </td>
+                <td><span class="badge badge-purple">Genre Analytics</span></td>
+                <td>Admin</td>
+                <td>Nov 25, 2025</td>
+                <td>1.8 MB</td>
+                <td><span class="status-badge success">Completed</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="btn-icon btn-download" title="Download">
+                      <i class='bx bx-download'></i>
+                    </button>
+                    <button class="btn-icon btn-view" title="View">
+                      <i class='bx bx-show'></i>
+                    </button>
+                    <button class="btn-icon btn-delete" title="Delete">
+                      <i class='bx bx-trash'></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="report-name">
+                    <i class='bx bxs-file-pdf'></i>
+                    <span>User Growth Analysis</span>
+                  </div>
+                </td>
+                <td><span class="badge badge-blue">User Activity</span></td>
+                <td>Admin</td>
+                <td>Nov 20, 2025</td>
+                <td>3.2 MB</td>
+                <td><span class="status-badge processing">Processing</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="btn-icon" disabled>
+                      <i class='bx bx-loader-alt bx-spin'></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="report-name">
+                    <i class='bx bxs-file-pdf'></i>
+                    <span>Weekly Session Report</span>
+                  </div>
+                </td>
+                <td><span class="badge badge-orange">Session Data</span></td>
+                <td>Admin</td>
+                <td>Nov 18, 2025</td>
+                <td>4.1 MB</td>
+                <td><span class="status-badge success">Completed</span></td>
+                <td>
+                  <div class="action-btns">
+                    <button class="btn-icon btn-download" title="Download">
+                      <i class='bx bx-download'></i>
+                    </button>
+                    <button class="btn-icon btn-view" title="View">
+                      <i class='bx bx-show'></i>
+                    </button>
+                    <button class="btn-icon btn-delete" title="Delete">
+                      <i class='bx bx-trash'></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast"></div>
+
+  <script src="./scripts/common.js"></script>
+  <script>
+    document.querySelectorAll('.report-btn, .btn-download').forEach(btn => {
+      btn.addEventListener('click', () => {
+        showToast('Report downloaded successfully!', 'success');
+      });
+    });
+
+    document.getElementById('generateReportBtn').addEventListener('click', () => {
+      showToast('Report generation started. You will be notified when ready.', 'info');
+    });
+  </script>
+</body>
+</html>

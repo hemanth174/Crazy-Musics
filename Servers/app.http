@@ -1,0 +1,70 @@
+### Ping Test - Check if server is running
+GET http://localhost:3000/ping
+
+### Login - User Authentication
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "pass": "1234"
+}
+
+### Signup - Create New Account (Modern Gen-Z Style)
+# Required: fullName, email, password (10+ chars with uppercase, lowercase, number, special char), dob
+# Optional: musicGenre, favoriteArtist
+POST http://localhost:3000/signup
+Content-Type: application/json
+
+{
+  "fullName": "John Doe",
+  "email": "newuser@gmail.com",
+  "password": "StrongPass@123",
+  "dob": "2000-01-15",
+  "musicGenre": "Lofi",
+  "favoriteArtist": "The Weeknd"
+}
+
+### Get All Users (Protected Route - Requires Token)
+GET http://localhost:3000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWVhZjIwMDlhZTc4ZTJhYjNlN2NlOCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE3NjM2MTk2MjYsImV4cCI6MTc2Mzg3ODgyNn0.e-JMHw9gwpqWZa6dvEuZrOvRsEtiqmX1_z7JudrizeM
+
+### Get User Sessions (Protected Route - Requires Token)
+# Returns all active login sessions for the authenticated user
+GET http://localhost:3000/sessions
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MWVhZjIwMDlhZTc4ZTJhYjNlN2NlOCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE3NjM2MTk2MjYsImV4cCI6MTc2Mzg3ODgyNn0.e-JMHw9gwpqWZa6dvEuZrOvRsEtiqmX1_z7JudrizeM
+
+### Delete User by ID
+DELETE http://localhost:3000/user/691d95cbe93573485aea40f2
+
+### ============================================
+### Example with actual token (replace with your token)
+### ============================================
+
+### Login Example with Strong Password
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "pass": "MySecure@Pass123"
+}
+
+### GEt moethod
+### Ping test
+GET http://localhost:3000/
+
+### Search music (replace `arijit` if needed)
+GET http://localhost:3000/api/search?q=arijit
+
+### Another test example
+GET http://localhost:3000/api/search?q=shape of you
+
+### Test with encoded query
+GET http://localhost:3000/api/search?q=arijit%20singh
+
+###
+GET http://localhost:3000/api/saavn/search?q=sid%20sriram
+
+###
+GET http://localhost:3000/api/saavn/song?id=abcd1234

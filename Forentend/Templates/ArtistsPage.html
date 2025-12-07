@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='icon' href='../Static/images/APPlogo.png'>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../Static/style.css">
+    <title>Artists - Crazy-Musics</title>
+    <style>
+        .artists-section {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0d0221 0%, #1a0933 50%, #2d1b4e 100%);
+            padding: 100px 20px 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .artists-section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+            z-index: 0;
+        }
+
+        .artists-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .artists-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .artists-header h1 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            color: #ffffff;
+            font-style: italic;
+            font-weight: 900;
+            text-shadow: 0 0 20px rgba(144, 54, 224, 0.8),
+                         0 0 40px rgba(144, 54, 224, 0.6);
+            margin-bottom: 20px;
+        }
+
+        .artists-header p {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: #b3b3b3;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .artists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .artist-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .artist-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(144, 54, 224, 0.5);
+            box-shadow: 0 10px 40px rgba(144, 54, 224, 0.4);
+        }
+
+        .artist-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #9036e0 0%, #06b6d4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: white;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .artist-image::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.3) 100%);
+        }
+
+        .artist-info {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .artist-info h3 {
+            color: #ffffff;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .artist-info p {
+            color: #b3b3b3;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        .artist-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            color: #9036e0;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .artists-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="NavBar">
+        <div class="Navele">
+            <img src='../Static/images/APPlogo.png'>
+            <h1>Crazy-Musics</h1>
+        </div>
+        <div class='NavButton'>
+            <div class="nav-toggle" id="navToggle">
+                <img width="28" height="28" src="https://img.icons8.com/fluency-systems-filled/48/FFFFFF/menu.png" alt="menu"/>
+            </div>
+            <div class="Navlinks">
+                <p onclick="window.location.href='./index.html'">Home</p>
+                <p onclick="window.location.href='./index.html#secondpage1'">Features</p>
+                <p onclick="window.location.href='./ArtistsPage.html'" style="border: 1px solid white; padding: 10px; border-radius: 10px;">Artists</p>
+                <p onclick="window.location.href='./AboutPage.html'">About</p>
+                <p onclick="window.location.href='./index.html#contactPage1'">Contact</p>
+            </div>
+            <div class="button2">
+                <button id="launchAppBtn">Launch APP</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="CloseTbn">
+            <p class="close-mobile" id="closeMobile">
+                <img width="38" height="38" src="https://img.icons8.com/quill/100/FFFFFF/multiply-2.png" alt="multiply-2"/>
+            </p>
+        </div>
+        <a href="./index.html">Home</a>
+        <a href="./index.html#secondpage1">Features</a>
+        <a href="./ArtistsPage.html">Artists</a>
+        <a href="./AboutPage.html">About</a>
+        <a href="./index.html#contactPage1">Contact</a>
+    </div>
+
+    <div class="artists-section">
+        <div class="artists-container">
+            <div class="artists-header">
+                <h1>FEATURED ARTISTS</h1>
+                <p>Discover the madness behind the music. Meet the artists who bring cosmic chaos to life.</p>
+            </div>
+
+            <div class="artists-grid">
+                <div class="artist-card">
+                    <div class="artist-image" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);">
+                        🎸
+                    </div>
+                    <div class="artist-info">
+                        <h3>Electric Vortex</h3>
+                        <p>Synth-Rock Fusion</p>
+                        <div class="artist-stats">
+                            <div class="stat">
+                                <div class="stat-number">2.5M</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">45</div>
+                                <div class="stat-label">Tracks</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="artist-card">
+                    <div class="artist-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        🎹
+                    </div>
+                    <div class="artist-info">
+                        <h3>Neon Pulse</h3>
+                        <p>Electronic Wave</p>
+                        <div class="artist-stats">
+                            <div class="stat">
+                                <div class="stat-number">1.8M</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">67</div>
+                                <div class="stat-label">Tracks</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="artist-card">
+                    <div class="artist-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        🎤
+                    </div>
+                    <div class="artist-info">
+                        <h3>Cosmic Echo</h3>
+                        <p>Psychedelic Vibes</p>
+                        <div class="artist-stats">
+                            <div class="stat">
+                                <div class="stat-number">3.2M</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">89</div>
+                                <div class="stat-label">Tracks</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="artist-card">
+                    <div class="artist-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        🎧
+                    </div>
+                    <div class="artist-info">
+                        <h3>Midnight Frequency</h3>
+                        <p>Dark Techno</p>
+                        <div class="artist-stats">
+                            <div class="stat">
+                                <div class="stat-number">2.1M</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">52</div>
+                                <div class="stat-label">Tracks</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="artist-card">
+                    <div class="artist-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        🎵
+                    </div>
+                    <div class="artist-info">
+                        <h3>Stellar Beats</h3>
+                        <p>Space Ambient</p>
+                        <div class="artist-stats">
+                            <div class="stat">
+                                <div class="stat-number">1.5M</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">34</div>
+                                <div class="stat-label">Tracks</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="artist-card">
+                    <div class="artist-image" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        🎼
+                    </div>
+                    <div class="artist-info">
+                        <h3>Quantum Wave</h3>
+                        <p>Experimental Fusion</p>
+                        <div class="artist-stats">
+                            <div class="stat">
+                                <div class="stat-number">2.9M</div>
+                                <div class="stat-label">Followers</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number">71</div>
+                                <div class="stat-label">Tracks</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const navToggle = document.getElementById("navToggle");
+        const mobileMenu = document.getElementById("mobileMenu");
+        const closeMobile = document.getElementById("closeMobile");
+
+        navToggle.addEventListener("click", () => {
+            mobileMenu.classList.add("active");
+        });
+
+        closeMobile.addEventListener("click", () => {
+            mobileMenu.classList.remove("active");
+        });
+
+        document.querySelectorAll(".mobile-menu a").forEach(link => {
+            link.addEventListener("click", () => {
+                mobileMenu.classList.remove("active");
+            });
+        });
+
+        document.getElementById("launchAppBtn").addEventListener("click", () => {
+            window.location.href = "./RegisterPage.html";
+        });
+    </script>
+</body>
+
+</html>

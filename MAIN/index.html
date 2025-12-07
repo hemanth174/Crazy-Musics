@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crazy Musics - Home</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="logo">Crazy Musics</div>
+    <nav class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="settings.html">Settings</a>
+      <span id="userInfo" style="display: none; color: rgba(255,255,255,0.9); font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="opacity: 0.8;">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+        <span id="userName"></span>
+      </span>
+      <a href="#" id="logoutBtn" style="display: none;">Logout</a>
+      <!-- PATH: Login page link in navbar -->
+      <a href="../Forentend/Templates/LoginPage.html" id="loginBtn">Login</a>
+    </nav>
+  </header>
+
+  <!-- Hidden audio player for background playback -->
+  <audio id="backgroundAudio" style="display: none;"></audio>
+
+  <main class="home">
+    <section class="welcome">
+      <h1>Welcome to Crazy Musics</h1>
+      <p>Discover, stream, and enjoy your favorite tracks.</p>
+    </section>
+
+    <!-- Currently Playing Section -->
+    <section class="currently-playing-section" id="currentlyPlayingSection" style="display: none;">
+      <div class="currently-playing-card">
+        <div class="now-playing-indicator">
+          <span class="pulse-dot"></span>
+          <span class="now-playing-text">NOW PLAYING</span>
+        </div>
+        <div class="currently-playing-content">
+          <img id="currentPlayingCover" src="" alt="Now Playing" />
+          <div class="current-playing-info">
+            <h3 id="currentPlayingName">Song Name</h3>
+            <p id="currentPlayingArtist">Artist Name</p>
+            <div class="mini-player-controls">
+              <button id="miniPrevBtn" class="mini-control-btn" title="Previous">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                </svg>
+              </button>
+              <button id="miniPlayPauseBtn" class="mini-control-btn play-pause-mini" title="Play/Pause">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="miniPlayIcon">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="miniPauseIcon" style="display: none;">
+                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                </svg>
+              </button>
+              <button id="miniNextBtn" class="mini-control-btn" title="Next">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                </svg>
+              </button>
+              <button id="goToPlayerBtn" class="go-to-player-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+                  <path d="M10 8v8l6-4z"/>
+                </svg>
+                Open Player
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recently Played Section -->
+    <section class="playlists" id="recentlyPlayedSection" style="display: none;">
+      <h2>📜 Listen History</h2>
+      <div class="playlist-grid" id="recentlyPlayedGrid"></div>
+    </section>
+
+    <section class="playlists">
+      <h2>Featured Playlists</h2>
+      <div class="playlist-grid">
+        <div class="playlist-card" data-query="arijit singh romantic hits">
+          <div class="card-bg" style="background-image: url('https://picsum.photos/seed/1/300/300');"></div>
+          <div class="card-info"><h3>Romantic Hits</h3><p>Arijit Singh • Hindi</p></div>
+        </div>
+        <div class="playlist-card" data-query="sid sriram tamil melody">
+          <div class="card-bg" style="background-image: url('https://picsum.photos/seed/2/300/300');"></div>
+          <div class="card-info"><h3>Melody Magic</h3><p>Sid Sriram • Tamil</p></div>
+        </div>
+        <div class="playlist-card" data-query="diljit dosanjh punjabi">
+          <div class="card-bg" style="background-image: url('https://picsum.photos/seed/3/300/300');"></div>
+          <div class="card-info"><h3>Punjabi Vibes</h3><p>Diljit Dosanjh • Punjabi</p></div>
+        </div>
+        <div class="playlist-card" data-query="a r rahman best songs">
+          <div class="card-bg" style="background-image: url('https://picsum.photos/seed/4/300/300');"></div>
+          <div class="card-info"><h3>Legendary Classics</h3><p>A.R. Rahman • Multi</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="spotify-section" id="live-tracks">
+      <div class="spotify-header">
+        <p class="pill-label">Live from JioSaavn</p>
+        <h2>Fresh drops for your vibe</h2>
+        <p>Search any Telugu, Hindi, Tamil, or English song — we pull full MP3 tracks directly from JioSaavn.</p>
+      </div>
+
+      <form class="spotify-search" id="saavnForm">
+        <input type="text" id="saavnQuery" placeholder="Search for tracks or artists..."   autocomplete="off" />
+        <button type="submit" id="saavnSubmit">Fetch songs</button>
+      </form>
+
+      <p class="spotify-status" id="saavnStatus">Ready to fetch music.</p>
+      <div class="song-grid" id="songGrid" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script>
+/*
+================================================================================
+  CRAZY MUSICS - HOME PAGE
+================================================================================
+  This is the main home page for the music app.
+  
+  WHAT IT DOES:
+  1. Checks if user is logged in (redirects if not)
+  2. Shows user info in navbar
+  3. Lets user search for songs
+  4. Shows search results as clickable cards
+  5. Shows listening history
+  6. Has a mini player for background music
+  
+================================================================================
+*/
+
+
+// ==========================================
+// STEP 1: CHECK IF USER IS LOGGED IN
+// ==========================================
+
+var userToken = localStorage.getItem("token");
+
+// If no token, send to login page
+// PATH: From MAIN folder -> go up one level -> Forentend/Templates/LoginPage.html
+if (!userToken) {
+  window.location.href = "../Forentend/Templates/LoginPage.html";
+}
+
+
+// ==========================================
+// STEP 2: SETUP USER INFO IN NAVBAR
+// ==========================================
+
+var userEmail = localStorage.getItem('userEmail');
+
+if (userToken && userEmail) {
+  // Hide login button
+  document.getElementById('loginBtn').style.display = 'none';
+  
+  // Show user info
+  document.getElementById('userInfo').style.display = 'flex';
+  document.getElementById('logoutBtn').style.display = 'block';
+  
+  // Show username (part before @)
+  var username = userEmail.split('@')[0];
+  document.getElementById('userName').textContent = username;
+}
+
+// Logout button click
+// PATH: Redirect to login page after logout
+document.getElementById('logoutBtn').onclick = function(e) {
+  e.preventDefault();
+  localStorage.removeItem('token');
+  localStorage.removeItem('userEmail');
+  window.location.href = '../Forentend/Templates/LoginPage.html';
+};
+
+
+// ==========================================
+// STEP 3: GET HTML ELEMENTS WE NEED
+// ==========================================
+
+var statusMessage = document.getElementById('saavnStatus');
+var songGridArea = document.getElementById('songGrid');
+var searchForm = document.getElementById('saavnForm');
+var searchInput = document.getElementById('saavnQuery');
+var searchButton = document.getElementById('saavnSubmit');
+
+// Default image if song has no cover
+var defaultImage = 'https://placehold.co/400x400/0f172a/ffffff?text=Crazy+Musics';
+
+// Store current search results
+var currentSearchResults = [];
+
+
+// ==========================================
+// STEP 4: HELPER FUNCTIONS
+// ==========================================
+
+// Show status message
+function showStatus(message, isError) {
+  statusMessage.textContent = message;
+  if (isError) {
+    statusMessage.style.color = "#ff6b6b";  // Red for errors
+  } else {
+    statusMessage.style.color = "rgba(255,255,255,0.7)";  // White for normal
+  }
+}
+
+// Format song duration (seconds to M:SS)
+function formatDuration(seconds) {
+  var minutes = Math.floor(seconds / 60);
+  var secs = seconds % 60;
+  var secsText = secs < 10 ? '0' + secs : secs;
+  return minutes + ':' + secsText;
+}
+
+
+// ==========================================
+// STEP 5: SEARCH FOR SONGS
+// ==========================================
+
+function searchSongs(query) {
+  // Remove extra spaces
+  var searchText = query.trim();
+  
+  // Check if empty
+  if (!searchText) {
+    showStatus("Type something to search.");
+    return;
+  }
+  
+  // Show searching message
+  showStatus('Searching for "' + searchText + '"...');
+  searchButton.disabled = true;
+  searchButton.textContent = "Searching...";
+  
+  // Make API request
+  fetch('/api/saavn/search?q=' + encodeURIComponent(searchText))
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Server error: ' + response.status);
+      }
+      return response.json();
+    })
+    .then(function(data) {
+      // Get songs from response
+      var songs = data.songs || data || [];
+      
+      if (songs.length === 0) {
+        showStatus('No songs found for "' + searchText + '".', true);
+        songGridArea.innerHTML = "";
+        return;
+      }
+      
+      // Save results
+      currentSearchResults = songs;
+      
+      // Show results
+      showStatus('Found ' + songs.length + ' songs for "' + searchText + '"');
+      displaySongs(songs);
+    })
+    .catch(function(error) {
+      showStatus('Error: ' + error.message, true);
+    })
+    .finally(function() {
+      // Reset button
+      searchButton.disabled = false;
+      searchButton.textContent = "Search songs";
+    });
+}
+
+
+// ==========================================
+// STEP 6: DISPLAY SONGS
+// ==========================================
+
+function displaySongs(songs) {
+  // If no songs, show empty state
+  if (!songs || songs.length === 0) {
+    showEmptyState();
+    return;
+  }
+  
+  // Build HTML for each song (max 12)
+  var htmlParts = [];
+  var maxSongs = Math.min(songs.length, 12);
+  
+  for (var i = 0; i < maxSongs; i++) {
+    var song = songs[i];
+    
+    // Get song info
+    var cover = (song.image || defaultImage).replace("150x150", "500x500");
+    var name = song.name || song.title || 'Unknown Song';
+    var artist = song.artists || song.subtitle || 'Unknown Artist';
+    var duration = song.duration || 180;
+    var year = song.year || '';
+    
+    // Build card HTML
+    var cardHtml = '<article class="song-card" data-song-id="' + song.id + '" data-song-index="' + i + '">';
+    cardHtml += '  <div class="song-card-cover">';
+    cardHtml += '    <img src="' + cover + '" alt="' + name + '" loading="lazy" />';
+    cardHtml += '    <button class="play-overlay" title="Play ' + name + '">';
+    cardHtml += '      <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+    cardHtml += '    </button>';
+    cardHtml += '  </div>';
+    cardHtml += '  <div class="song-meta">';
+    cardHtml += '    <h3>' + name + '</h3>';
+    cardHtml += '    <p>' + artist + '</p>';
+    cardHtml += '  </div>';
+    cardHtml += '  <div class="song-footer">';
+    if (year) {
+      cardHtml += '    <span class="pill-label">' + year + '</span>';
+    }
+    cardHtml += '    <span class="pill-label">' + formatDuration(duration) + '</span>';
+    cardHtml += '  </div>';
+    cardHtml += '</article>';
+    
+    htmlParts.push(cardHtml);
+  }
+  
+  // Put all cards in grid
+  songGridArea.innerHTML = htmlParts.join('');
+  
+  // Add click handlers to each card
+  var allCards = document.querySelectorAll('.song-card');
+  for (var j = 0; j < allCards.length; j++) {
+    allCards[j].onclick = onSongCardClick;
+  }
+}
+
+
+// ==========================================
+// STEP 7: WHEN SONG CARD IS CLICKED
+// ==========================================
+
+function onSongCardClick(event) {
+  var card = event.currentTarget;
+  var songId = card.getAttribute('data-song-id');
+  var songIndex = parseInt(card.getAttribute('data-song-index'));
+  
+  showStatus('Loading song...');
+  
+  // First check if song is playable
+  fetch('/api/saavn/song?id=' + songId)
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error('Could not load song');
+      }
+      return response.json();
+    })
+    .then(function(songData) {
+      // Check if song has playable URL
+      if (!songData.media_url_320 && !songData.media_url_160) {
+        showStatus("This song can't be played. Try another one.", true);
+        return;
+      }
+      
+      // Create playlist from search results
+      var playlist = [];
+      for (var i = 0; i < currentSearchResults.length; i++) {
+        var s = currentSearchResults[i];
+        playlist.push({
+          id: s.id,
+          name: s.name || s.title || 'Unknown',
+          artists: s.artists || s.subtitle || 'Unknown Artist',
+          cover: (s.image || defaultImage).replace("150x150", "500x500"),
+          duration: s.duration || 180,
+          preview: ''
+        });
+      }
+      
+      // Save playlist to browser storage
+      localStorage.setItem("currentPlaylist", JSON.stringify(playlist));
+      localStorage.setItem("currentIndex", songIndex.toString());
+      localStorage.setItem("musicSource", "jiosaavn");
+      
+      // Go to player page
+      window.location.href = 'player.html?index=' + songIndex + '&source=jiosaavn';
+    })
+    .catch(function(error) {
+      showStatus('Error: ' + error.message, true);
+    });
+}
+
+
+// ==========================================
+// STEP 8: SHOW EMPTY STATE (SUGGESTIONS)
+// ==========================================
+
+function showEmptyState() {
+const html = `
+  <div style="grid-column: 1/-1; text-align: center; padding: 3rem 1rem;">
+    <svg width="120" height="120" viewBox="0 0 24 24" fill="none"
+         stroke="rgba(255,255,255,0.3)" stroke-width="1.5"
+         style="margin: 0 auto 1.5rem;">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M9 9h.01M15 9h.01M9.5 13a3.5 3.5 0 005 0"></path>
+    </svg>
+
+    <h3 style="color: rgba(255,255,255,0.9); font-size: 1.5rem; margin-bottom: 1rem;">
+      Search for songs!
+    </h3>
+
+    <p style="color: rgba(255,255,255,0.6); margin-bottom: 2rem;">
+      Try these popular artists:
+    </p>
+
+    <div style="
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+        max-width: 600px;
+        margin: 0 auto;">
+        
+      <button class="suggestion-chip" data-artist="arijit singh">Arijit Singh</button>
+      <button class="suggestion-chip" data-artist="sid sriram tamil">Sid Sriram</button>
+      <button class="suggestion-chip" data-artist="armaan malik">Armaan Malik</button>
+      <button class="suggestion-chip" data-artist="shreya ghoshal">Shreya Ghoshal</button>
+      <button class="suggestion-chip" data-artist="atif aslam">Atif Aslam</button>
+      <button class="suggestion-chip" data-artist="jubin nautiyal">Jubin Nautiyal</button>
+      <button class="suggestion-chip" data-artist="diljit dosanjh">Diljit Dosanjh</button>
+      <button class="suggestion-chip" data-artist="badshah">Badshah</button>
+    </div>
+  </div>
+`;
+
+songGridArea.innerHTML = html;
+
+  
+  // Add click handlers to suggestion buttons
+  var chips = document.querySelectorAll('.suggestion-chip');
+  for (var i = 0; i < chips.length; i++) {
+    chips[i].onclick = function() {
+      var artist = this.getAttribute('data-artist');
+      searchInput.value = artist;
+      searchSongs(artist);
+    };
+  }
+}
+
+
+// ==========================================
+// STEP 9: FEATURED PLAYLIST CARDS
+// ==========================================
+
+var playlistCards = document.querySelectorAll('.playlist-card[data-query]');
+
+for (var i = 0; i < playlistCards.length; i++) {
+  playlistCards[i].onclick = function() {
+    var query = this.getAttribute('data-query');
+    if (query) {
+      searchInput.value = query;
+      searchSongs(query);
+      // Scroll to results
+      document.getElementById('live-tracks').scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+}
+
+
+// ==========================================
+// STEP 10: SEARCH FORM SUBMIT
+// ==========================================
+
+searchForm.onsubmit = function(e) {
+  e.preventDefault();  // Don't reload page
+  searchSongs(searchInput.value);
+};
+
+
+// ==========================================
+// STEP 11: LOAD LISTENING HISTORY
+// ==========================================
+
+function loadListeningHistory() {
+  try {
+    var historyJson = localStorage.getItem('listenHistory');
+    if (!historyJson) {
+      document.getElementById('recentlyPlayedSection').style.display = 'none';
+      return;
+    }
+    
+    var history = JSON.parse(historyJson);
+    if (history.length === 0) {
+      document.getElementById('recentlyPlayedSection').style.display = 'none';
+      return;
+    }
+    
+    // Show section
+    document.getElementById('recentlyPlayedSection').style.display = 'block';
+    var historyGrid = document.getElementById('recentlyPlayedGrid');
+    
+    // Build HTML for last 8 songs
+    var htmlParts = [];
+    var maxItems = Math.min(history.length, 8);
+    
+    for (var i = 0; i < maxItems; i++) {
+      var song = history[i];
+      var cover = (song.cover || song.image || defaultImage).replace("150x150", "500x500");
+      var name = song.name || song.title || 'Unknown';
+      var artist = song.artists || song.subtitle || 'Unknown Artist';
+      var date = song.date || 'Recently';
+      
+      var html = '<div class="playlist-card history-card" data-history-id="' + song.id + '">';
+      html += '  <div class="card-bg" style="background-image: url(\'' + cover + '\');"></div>';
+      html += '  <div class="card-info">';
+      html += '    <h3>' + name + '</h3>';
+      html += '    <p>' + artist + '</p>';
+      html += '    <span class="pill-label" style="font-size: 0.7rem; margin-top: 0.3rem;">' + date + '</span>';
+      html += '  </div>';
+      html += '</div>';
+      
+      htmlParts.push(html);
+    }
+    
+    historyGrid.innerHTML = htmlParts.join('');
+    
+    // Add click handlers
+    var historyCards = document.querySelectorAll('.history-card');
+    for (var j = 0; j < historyCards.length; j++) {
+      historyCards[j].onclick = function() {
+        var songId = this.getAttribute('data-history-id');
+        playFromHistory(songId);
+      };
+    }
+    
+  } catch (e) {
+    // Error loading history, just hide section
+    document.getElementById('recentlyPlayedSection').style.display = 'none';
+  }
+}
+
+function playFromHistory(songId) {
+  try {
+    var history = JSON.parse(localStorage.getItem('listenHistory') || '[]');
+    
+    // Create playlist from history
+    var playlist = [];
+    var songIndex = 0;
+    
+    for (var i = 0; i < Math.min(history.length, 20); i++) {
+      var song = history[i];
+      
+      // Find which index our song is at
+      if (song.id === songId) {
+        songIndex = i;
+      }
+      
+      playlist.push({
+        id: song.id,
+        name: song.name || song.title || 'Unknown',
+        artists: song.artists || song.subtitle || 'Unknown Artist',
+        cover: (song.cover || song.image || defaultImage).replace("150x150", "500x500"),
+        duration: song.duration || 180,
+        preview: ''
+      });
+    }
+    
+    // Save and go to player
+    localStorage.setItem("currentPlaylist", JSON.stringify(playlist));
+    localStorage.setItem("currentIndex", songIndex.toString());
+    localStorage.setItem("musicSource", "jiosaavn");
+    
+    window.location.href = 'player.html?index=' + songIndex + '&source=jiosaavn';
+    
+  } catch (e) {
+    showStatus('Error loading from history', true);
+  }
+}
+
+
+// ==========================================
+// STEP 12: MINI PLAYER (CURRENTLY PLAYING)
+// ==========================================
+
+var miniPlayerAudio = document.getElementById('backgroundAudio');
+var miniPlaylist = [];
+var miniCurrentIndex = 0;
+var isMiniPlaying = false;
+
+function loadMiniPlayer() {
+  try {
+    // Get current playing info from storage
+    var playlistJson = localStorage.getItem('currentPlaylist');
+    var isPlaying = localStorage.getItem('isCurrentlyPlaying') === 'true';
+    var audioUrl = localStorage.getItem('currentAudioUrl');
+    var savedTime = parseFloat(localStorage.getItem('currentPlaybackTime') || '0');
+    
+    if (!playlistJson || !isPlaying) {
+      document.getElementById('currentlyPlayingSection').style.display = 'none';
+      return;
+    }
+    
+    miniPlaylist = JSON.parse(playlistJson);
+    miniCurrentIndex = parseInt(localStorage.getItem('currentIndex') || '0');
+    
+    var currentSong = miniPlaylist[miniCurrentIndex];
+    if (!currentSong) {
+      document.getElementById('currentlyPlayingSection').style.display = 'none';
+      return;
+    }
+    
+    // Show mini player
+    document.getElementById('currentlyPlayingSection').style.display = 'block';
+    
+    // Update song info
+    var cover = (currentSong.cover || currentSong.image || defaultImage).replace("150x150", "500x500");
+    document.getElementById('currentPlayingCover').src = cover;
+    document.getElementById('currentPlayingName').textContent = currentSong.name || 'Unknown';
+    document.getElementById('currentPlayingArtist').textContent = currentSong.artists || 'Unknown Artist';
+    
+    // Continue playing audio
+    if (audioUrl && isPlaying) {
+      miniPlayerAudio.src = audioUrl;
+      
+      // Resume from saved position
+      miniPlayerAudio.onloadedmetadata = function() {
+        if (savedTime > 0 && savedTime < miniPlayerAudio.duration) {
+          miniPlayerAudio.currentTime = savedTime;
+        }
+      };
+      
+      // Try to play
+      var playAttempt = miniPlayerAudio.play();
+      if (playAttempt) {
+        playAttempt.then(function() {
+          isMiniPlaying = true;
+          showMiniPauseButton();
+          
+          // Save position as we play
+          miniPlayerAudio.ontimeupdate = function() {
+            if (isMiniPlaying) {
+              localStorage.setItem('currentPlaybackTime', miniPlayerAudio.currentTime.toString());
+            }
+          };
+          
+          // When song ends
+          miniPlayerAudio.onended = function() {
+            if (miniCurrentIndex < miniPlaylist.length - 1) {
+              miniNextSong();
+            } else {
+              stopMiniPlayer();
+            }
+          };
+        }).catch(function() {
+          isMiniPlaying = false;
+        });
+      }
+    }
+    
+    // Setup mini player buttons
+    document.getElementById('miniPlayPauseBtn').onclick = toggleMiniPlayPause;
+    document.getElementById('miniPrevBtn').onclick = miniPrevSong;
+    document.getElementById('miniNextBtn').onclick = miniNextSong;
+    document.getElementById('goToPlayerBtn').onclick = function() {
+      window.location.href = 'player.html?index=' + miniCurrentIndex + '&source=jiosaavn';
+    };
+    
+  } catch (e) {
+    document.getElementById('currentlyPlayingSection').style.display = 'none';
+  }
+}
+
+function toggleMiniPlayPause() {
+  if (isMiniPlaying) {
+    // Pause
+    miniPlayerAudio.pause();
+    isMiniPlaying = false;
+    showMiniPlayButton();
+    localStorage.setItem('isCurrentlyPlaying', 'false');
+  } else {
+    // Play
+    var playAttempt = miniPlayerAudio.play();
+    if (playAttempt) {
+      playAttempt.then(function() {
+        isMiniPlaying = true;
+        showMiniPauseButton();
+        localStorage.setItem('isCurrentlyPlaying', 'true');
+      }).catch(function() {});
+    }
+  }
+}
+
+function miniPrevSong() {
+  if (miniCurrentIndex > 0) {
+    miniCurrentIndex--;
+    loadMiniSong(miniCurrentIndex);
+  }
+}
+
+function miniNextSong() {
+  if (miniCurrentIndex < miniPlaylist.length - 1) {
+    miniCurrentIndex++;
+    loadMiniSong(miniCurrentIndex);
+  }
+}
+
+function loadMiniSong(index) {
+  var song = miniPlaylist[index];
+  if (!song) return;
+  
+  miniCurrentIndex = index;
+  localStorage.setItem('currentIndex', index.toString());
+  
+  // Update UI
+  var cover = (song.cover || song.image || defaultImage).replace("150x150", "500x500");
+  document.getElementById('currentPlayingCover').src = cover;
+  document.getElementById('currentPlayingName').textContent = song.name || 'Unknown';
+  document.getElementById('currentPlayingArtist').textContent = song.artists || 'Unknown Artist';
+  
+  // Load audio
+  var audioUrl = '/api/saavn/stream/' + song.id;
+  miniPlayerAudio.src = audioUrl;
+  localStorage.setItem('currentAudioUrl', audioUrl);
+  localStorage.setItem('currentPlaybackTime', '0');
+  
+  // Play
+  var playAttempt = miniPlayerAudio.play();
+  if (playAttempt) {
+    playAttempt.then(function() {
+      isMiniPlaying = true;
+      showMiniPauseButton();
+      localStorage.setItem('isCurrentlyPlaying', 'true');
+    }).catch(function() {});
+  }
+}
+
+function stopMiniPlayer() {
+  miniPlayerAudio.pause();
+  isMiniPlaying = false;
+  showMiniPlayButton();
+  localStorage.setItem('isCurrentlyPlaying', 'false');
+  localStorage.removeItem('currentPlaybackTime');
+}
+
+function showMiniPlayButton() {
+  document.getElementById('miniPlayIcon').style.display = 'block';
+  document.getElementById('miniPauseIcon').style.display = 'none';
+}
+
+function showMiniPauseButton() {
+  document.getElementById('miniPlayIcon').style.display = 'none';
+  document.getElementById('miniPauseIcon').style.display = 'block';
+}
+
+
+// ==========================================
+// STEP 13: START EVERYTHING!
+// ==========================================
+
+// Show empty state first
+showEmptyState();
+
+// Load mini player
+loadMiniPlayer();
+
+// Load history
+loadListeningHistory();
+
+  </script>
+</body>
+</html>

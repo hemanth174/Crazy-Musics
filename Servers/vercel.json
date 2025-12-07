@@ -1,0 +1,63 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "style.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "player.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "player.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "Forentend/Static/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/style.css",
+      "dest": "/style.css"
+    },
+    {
+      "src": "/player.css",
+      "dest": "/player.css"
+    },
+    {
+      "src": "/player.js",
+      "dest": "/player.js"
+    },
+    {
+      "src": "/api.js",
+      "dest": "/api.js"
+    },
+    {
+      "src": "/Forentend/Static/(.*)",
+      "dest": "/Forentend/Static/$1"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/server.js"
+    },
+    {
+      "src": "/login",
+      "dest": "/server.js"
+    },
+    {
+      "src": "/signup",
+      "dest": "/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
+    }
+  ]
+}
